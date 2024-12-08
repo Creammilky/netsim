@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph>
+    <Nodes>
+        <Node id="1">
+            <Label>Node A</Label>
+            <Weight>0.75</Weight>
+            <Properties>
+                <Property name="type">source</Property>
+                <Property name="color">blue</Property>
+            </Properties>
+        </Node>
+        <Node id="2">
+            <Label>Node B</Label>
+            <Weight>0.50</Weight>
+            <Properties>
+                <Property name="type">intermediate</Property>
+                <Property name="color">green</Property>
+            </Properties>
+        </Node>
+        <Node id="3">
+            <Label>Node C</Label>
+            <Weight>1.00</Weight>
+            <Properties>
+                <Property name="type">target</Property>
+                <Property name="color">red</Property>
+            </Properties>
+        </Node>
+    </Nodes>
+
+    <Edges>
+        <Edge source="1" target="2">
+<!--            <Weight>0.8</Weight>-->
+            <Type>directed</Type>
+            <Properties>
+                <Property name="relationship">connects</Property>
+                <Property name="strength">strong</Property>
+            </Properties>
+        </Edge>
+        <Edge source="2" target="3">
+            <Weight>0.6</Weight>
+            <Type>directed</Type>
+            <Properties>
+                <Property name="relationship">connects</Property>
+                <Property name="strength">medium</Property>
+            </Properties>
+        </Edge>
+        <Edge source="1" target="3">
+            <Weight>0.3</Weight>
+            <Type>undirected</Type>
+            <Properties>
+                <Property name="relationship">references</Property>
+                <Property name="strength">weak</Property>
+            </Properties>
+        </Edge>
+    </Edges>
+</Graph>
