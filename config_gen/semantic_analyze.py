@@ -1,8 +1,9 @@
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass, fields
+from dataclasses import dataclass
 from typing import Dict, List, Optional
 import networkx as nx
-from FRR.utils import graph_utils
+from utils import graph_utils
+
 
 @dataclass
 class Property:

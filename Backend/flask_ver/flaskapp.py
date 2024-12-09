@@ -1,10 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-from FRR.config_gen.semantic_analyze import GraphParser
-from FRR.utils.graph_utils import InteractiveNetwork
+from config_gen.semantic_analyze import GraphParser
+from utils.graph_utils import InteractiveNetwork
 
 app = Flask(__name__)
-parser = GraphParser('../../FRR/test/route_3.xml')
+parser = GraphParser('../../test/route_3.xml')
 parser.parse()
 G = parser.get_networkx()
 interactive_net = InteractiveNetwork(G)  # G 是你的原始NetworkX图
