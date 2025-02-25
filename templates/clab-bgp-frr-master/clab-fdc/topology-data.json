@@ -1,0 +1,677 @@
+{
+  "name": "fdc",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-456883dda823",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "mtu": 1500,
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMZAVQH2FDiJBPc7244JMk3NhSkw5f1xfOTXBp1PwYMR"],
+  "nodes": {
+    "host11": {
+      "index": "0",
+      "shortname": "host11",
+      "longname": "clab-fdc-host11",
+      "fqdn": "host11.fdc.io",
+      "group": "server",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host11",
+      "kind": "linux",
+      "image": "wbitt/network-multitool:alpine-extra",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.5",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::a",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "server",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host11",
+        "clab-node-longname": "clab-fdc-host11",
+        "clab-node-name": "host11",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 1180,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "host12": {
+      "index": "1",
+      "shortname": "host12",
+      "longname": "clab-fdc-host12",
+      "fqdn": "host12.fdc.io",
+      "group": "server",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host12",
+      "kind": "linux",
+      "image": "wbitt/network-multitool:alpine-extra",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::8",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "server",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host12",
+        "clab-node-longname": "clab-fdc-host12",
+        "clab-node-name": "host12",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 1180,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "host21": {
+      "index": "2",
+      "shortname": "host21",
+      "longname": "clab-fdc-host21",
+      "fqdn": "host21.fdc.io",
+      "group": "server",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host21",
+      "kind": "linux",
+      "image": "wbitt/network-multitool:alpine-extra",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.6",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::b",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "server",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host21",
+        "clab-node-longname": "clab-fdc-host21",
+        "clab-node-name": "host21",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 1180,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "host22": {
+      "index": "3",
+      "shortname": "host22",
+      "longname": "clab-fdc-host22",
+      "fqdn": "host22.fdc.io",
+      "group": "server",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host22",
+      "kind": "linux",
+      "image": "wbitt/network-multitool:alpine-extra",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.4",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::9",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "server",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host22",
+        "clab-node-longname": "clab-fdc-host22",
+        "clab-node-name": "host22",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 1180,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "host31": {
+      "index": "4",
+      "shortname": "host31",
+      "longname": "clab-fdc-host31",
+      "fqdn": "host31.fdc.io",
+      "group": "server",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host31",
+      "kind": "linux",
+      "image": "wbitt/network-multitool:alpine-extra",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::7",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "server",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host31",
+        "clab-node-longname": "clab-fdc-host31",
+        "clab-node-name": "host31",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 1180,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "host32": {
+      "index": "5",
+      "shortname": "host32",
+      "longname": "clab-fdc-host32",
+      "fqdn": "host32.fdc.io",
+      "group": "server",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host32",
+      "kind": "linux",
+      "image": "wbitt/network-multitool:alpine-extra",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.7",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::c",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "server",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host32",
+        "clab-node-longname": "clab-fdc-host32",
+        "clab-node-name": "host32",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 1180,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "leaf01": {
+      "index": "6",
+      "shortname": "leaf01",
+      "longname": "clab-fdc-leaf01",
+      "fqdn": "leaf01.fdc.io",
+      "group": "leaf",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf01",
+      "kind": "linux",
+      "image": "quay.io/frrouting/frr:9.1.0",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.21",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::4",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "leaf",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf01",
+        "clab-node-longname": "clab-fdc-leaf01",
+        "clab-node-name": "leaf01",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+      ]
+    },
+    "leaf02": {
+      "index": "7",
+      "shortname": "leaf02",
+      "longname": "clab-fdc-leaf02",
+      "fqdn": "leaf02.fdc.io",
+      "group": "leaf",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf02",
+      "kind": "linux",
+      "image": "quay.io/frrouting/frr:9.1.0",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.22",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "leaf",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf02",
+        "clab-node-longname": "clab-fdc-leaf02",
+        "clab-node-name": "leaf02",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+      ]
+    },
+    "leaf03": {
+      "index": "8",
+      "shortname": "leaf03",
+      "longname": "clab-fdc-leaf03",
+      "fqdn": "leaf03.fdc.io",
+      "group": "leaf",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf03",
+      "kind": "linux",
+      "image": "quay.io/frrouting/frr:9.1.0",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.23",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::6",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "leaf",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf03",
+        "clab-node-longname": "clab-fdc-leaf03",
+        "clab-node-name": "leaf03",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+      ]
+    },
+    "spine01": {
+      "index": "9",
+      "shortname": "spine01",
+      "longname": "clab-fdc-spine01",
+      "fqdn": "spine01.fdc.io",
+      "group": "spine",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/spine01",
+      "kind": "linux",
+      "image": "quay.io/frrouting/frr:9.1.0",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.11",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "spine",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/spine01",
+        "clab-node-longname": "clab-fdc-spine01",
+        "clab-node-name": "spine01",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+      ]
+    },
+    "spine02": {
+      "index": "10",
+      "shortname": "spine02",
+      "longname": "clab-fdc-spine02",
+      "fqdn": "spine02.fdc.io",
+      "group": "spine",
+      "labdir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/spine02",
+      "kind": "linux",
+      "image": "quay.io/frrouting/frr:9.1.0",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.12",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::5",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-node-group": "spine",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/spine02",
+        "clab-node-longname": "clab-fdc-spine02",
+        "clab-node-name": "spine02",
+        "clab-node-type": "",
+        "clab-owner": "carl",
+        "clab-topo-file": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/bgp-frr.clab.yml",
+        "containerlab": "fdc"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "a": {
+        "node": "spine01",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:70:46:f3",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf01",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:20:96:32",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "spine01",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:ac:b1:b7",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf02",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:9d:b9:6c",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "spine01",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:e8:23:b8",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf03",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:64:9f:97",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "spine02",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:f2:05:7d",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf01",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:7d:8e:1c",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "spine02",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:bf:de:d6",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf02",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:14:61:03",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "spine02",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:f1:6f:70",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf03",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:42:0c:b4",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "host11",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:fe:2d:36",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf01",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:d1:a3:9d",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "host12",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:95:47:92",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf01",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:3d:8b:91",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "host21",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:6b:48:13",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf02",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:3c:f8:2f",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "host22",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:63:0a:0c",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf02",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:a4:49:dd",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "host31",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:4b:8e:25",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf03",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:02:40:93",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "host32",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:e4:01:e4",
+        "peer": "z"
+      },
+      "z": {
+        "node": "leaf03",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:e9:ee:da",
+        "peer": "a"
+      }
+    }
+  ]
+}
