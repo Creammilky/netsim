@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional
 import networkx as nx
 from utils import graph_utils
+from api import clab_yaml_gen
 
 
 @dataclass
@@ -153,7 +154,8 @@ if __name__ == "__main__":
         print(f"{g_node}: {g_attr}")
     for g_deg in G.degree():
         print(f"{g_deg}")
-    ASN = nx.get_node_attributes(G, "ASN")
-    print(ASN)
+    # ASN = nx.get_node_attributes(G, "ASN")
+    # print(ASN)
+    clab_yaml_gen.gen_clab_yaml_from_nx(G)
     #interactive_net = graph_utils.InteractiveNetwork(G)
     #interactive_net.create_interactive_graph().show('../network.html', notebook=False)
