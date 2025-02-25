@@ -16,12 +16,14 @@ class Node:
     id: str
     label: str
     weight: float
+    ASN: int
     properties: List[Property]
 
     def get_attr(self) -> dict:
         return {"id": self.id,
                 "label": self.label,
                 "weight": self.weight,
+                "ASN": self.ASN,
                 "properties": self.properties}
 
 
@@ -56,7 +58,7 @@ class GraphParser:
             node_id = node_elem.get('id')
             label = node_elem.find('Label').text
             weight = float(node_elem.find('Weight').text) if node_elem.find('Weight') is not None else None
-
+            ASN = node_elem.find('ASN').text
             properties = []
             for prop in node_elem.findall('./Properties/Property'):
                 properties.append(Property(
@@ -68,6 +70,7 @@ class GraphParser:
                 id=node_id,
                 label=label,
                 weight=weight,
+                ASN = ASN,
                 properties=properties
             )
 
@@ -130,7 +133,7 @@ class GraphParser:
 
 # Usage example
 if __name__ == "__main__":
-    parser = GraphParser("../test/route_3.xml")
+    parser = GraphParser("../test/route_2.xml")
     parser.parse()
 
     # Print all nodes and their weights
@@ -144,8 +147,13 @@ if __name__ == "__main__":
         print(f"{edge.source} -> {edge.target} (Weight: {edge.weight}, Type: {edge.type})")
 
     G = parser.get_networkx()
-    graph_utils.draw_networkx_graph(G)
-    graph_utils.draw_networkx_graph_complex(G)
-    #graph_utils.draw_pyvis_network(G)
-    interactive_net = graph_utils.InteractiveNetwork(G)
-    interactive_net.create_interactive_graph().show('network.html', notebook=False)
+    # graph_utils.draw_networkx_graph(G)
+    # graph_utils.draw_networkx_graph_complex(G)
+    for g_node, g_attr in G.nodes.items():
+        print(f"{g_node}: {g_attr}")
+    for g_deg in G.degree():
+        print(f"{g_deg}")
+    ASN = nx.get_node_attributes(G, "ASN")
+    print(ASN)
+    #interactive_net = graph_utils.InteractiveNetwork(G)
+    #interactive_net.create_interactive_graph().show('../network.html', notebook=False)

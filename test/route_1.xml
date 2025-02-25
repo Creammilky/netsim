@@ -3,6 +3,7 @@
     <Nodes>
         <Node id="1">
             <Label>Node A</Label>
+            <ASN>64520</ASN>
             <Weight>0.75</Weight>
             <Properties>
                 <Property name="type">source</Property>
@@ -11,6 +12,7 @@
         </Node>
         <Node id="2">
             <Label>Node B</Label>
+            <ASN>64521</ASN>
             <Weight>0.50</Weight>
             <Properties>
                 <Property name="type">intermediate</Property>
@@ -19,6 +21,7 @@
         </Node>
         <Node id="3">
             <Label>Node C</Label>
+            <ASN>64522</ASN>
             <Weight>1.00</Weight>
             <Properties>
                 <Property name="type">target</Property>

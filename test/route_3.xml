@@ -3,102 +3,102 @@
     <Nodes>
         <Node id="1">
             <Label>Core Router 1</Label>
+            <ASN>65023</ASN>
             <Weight>1.00</Weight>
             <Properties>
                 <Property name="type">core</Property>
                 <Property name="role">backbone</Property>
                 <Property name="location">datacenter-1</Property>
-                <Property name="asn">65001</Property>
             </Properties>
         </Node>
         <Node id="2">
             <Label>Core Router 2</Label>
+            <ASN>65102</ASN>
             <Weight>1.00</Weight>
             <Properties>
                 <Property name="type">core</Property>
                 <Property name="role">backbone</Property>
                 <Property name="location">datacenter-2</Property>
-                <Property name="asn">65001</Property>
             </Properties>
         </Node>
         <Node id="3">
             <Label>Distribution 1</Label>
+            <ASN>65211</ASN>
             <Weight>0.85</Weight>
             <Properties>
                 <Property name="type">distribution</Property>
                 <Property name="role">aggregation</Property>
                 <Property name="location">region-east</Property>
-                <Property name="asn">65002</Property>
             </Properties>
         </Node>
         <Node id="4">
             <Label>Distribution 2</Label>
+            <ASN>65045</ASN>
             <Weight>0.85</Weight>
             <Properties>
                 <Property name="type">distribution</Property>
                 <Property name="role">aggregation</Property>
                 <Property name="location">region-west</Property>
-                <Property name="asn">65003</Property>
             </Properties>
         </Node>
         <Node id="5">
             <Label>Edge Router 1</Label>
+            <ASN>65320</ASN>
             <Weight>0.75</Weight>
             <Properties>
                 <Property name="type">edge</Property>
                 <Property name="role">customer-facing</Property>
                 <Property name="location">branch-1</Property>
-                <Property name="asn">65004</Property>
             </Properties>
         </Node>
         <Node id="6">
             <Label>Edge Router 2</Label>
+            <ASN>65433</ASN>
             <Weight>0.75</Weight>
             <Properties>
                 <Property name="type">edge</Property>
                 <Property name="role">customer-facing</Property>
                 <Property name="location">branch-2</Property>
-                <Property name="asn">65005</Property>
             </Properties>
         </Node>
         <Node id="7">
             <Label>Border Router 1</Label>
+            <ASN>65198</ASN>
             <Weight>0.90</Weight>
             <Properties>
                 <Property name="type">border</Property>
                 <Property name="role">internet-facing</Property>
                 <Property name="location">datacenter-1</Property>
-                <Property name="asn">65001</Property>
             </Properties>
         </Node>
         <Node id="8">
             <Label>Border Router 2</Label>
+            <ASN>65087</ASN>
             <Weight>0.90</Weight>
             <Properties>
                 <Property name="type">border</Property>
                 <Property name="role">internet-facing</Property>
                 <Property name="location">datacenter-2</Property>
-                <Property name="asn">65001</Property>
             </Properties>
         </Node>
         <Node id="9">
             <Label>Customer Edge 1</Label>
+            <ASN>65501</ASN>
             <Weight>0.70</Weight>
             <Properties>
                 <Property name="type">customer</Property>
                 <Property name="role">enterprise</Property>
                 <Property name="location">customer-site-1</Property>
-                <Property name="asn">65100</Property>
             </Properties>
         </Node>
         <Node id="10">
             <Label>Customer Edge 2</Label>
+            <ASN>65078</ASN>
             <Weight>0.70</Weight>
             <Properties>
                 <Property name="type">customer</Property>
                 <Property name="role">enterprise</Property>
                 <Property name="location">customer-site-2</Property>
-                <Property name="asn">65200</Property>
             </Properties>
         </Node>
     </Nodes>
@@ -113,16 +113,7 @@
                 <Property name="latency">ultra-low</Property>
             </Properties>
         </Edge>
-        <Edge source="1" target="3">
-            <Weight>0.9</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">40G</Property>
-                <Property name="protocol">BGP</Property>
-                <Property name="latency">low</Property>
-            </Properties>
-        </Edge>
-        <Edge source="2" target="4">
+        <Edge source="2" target="3">
             <Weight>0.9</Weight>
             <Type>directed</Type>
             <Properties>
@@ -149,33 +140,6 @@
                 <Property name="latency">medium</Property>
             </Properties>
         </Edge>
-        <Edge source="1" target="7">
-            <Weight>0.95</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">100G</Property>
-                <Property name="protocol">ISIS</Property>
-                <Property name="latency">ultra-low</Property>
-            </Properties>
-        </Edge>
-        <Edge source="2" target="8">
-            <Weight>0.95</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">100G</Property>
-                <Property name="protocol">ISIS</Property>
-                <Property name="latency">ultra-low</Property>
-            </Properties>
-        </Edge>
-        <Edge source="5" target="9">
-            <Weight>0.7</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">1G</Property>
-                <Property name="protocol">BGP</Property>
-                <Property name="latency">high</Property>
-            </Properties>
-        </Edge>
         <Edge source="6" target="10">
             <Weight>0.7</Weight>
             <Type>directed</Type>
@@ -185,31 +149,13 @@
                 <Property name="latency">high</Property>
             </Properties>
         </Edge>
-        <Edge source="3" target="4">
-            <Weight>0.85</Weight>
+        <Edge source="5" target="9">
+            <Weight>0.7</Weight>
             <Type>directed</Type>
             <Properties>
-                <Property name="bandwidth">40G</Property>
-                <Property name="protocol">ISIS</Property>
-                <Property name="latency">medium</Property>
-            </Properties>
-        </Edge>
-        <Edge source="7" target="8">
-            <Weight>0.95</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">100G</Property>
-                <Property name="protocol">ISIS</Property>
-                <Property name="latency">ultra-low</Property>
-            </Properties>
-        </Edge>
-        <Edge source="5" target="6">
-            <Weight>0.75</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">10G</Property>
-                <Property name="protocol">OSPF</Property>
-                <Property name="latency">medium</Property>
+                <Property name="bandwidth">1G</Property>
+                <Property name="protocol">BGP</Property>
+                <Property name="latency">high</Property>
             </Properties>
         </Edge>
     </Edges>

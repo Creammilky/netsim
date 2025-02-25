@@ -3,6 +3,7 @@
     <Nodes>
         <Node id="1">
             <Label>Router A</Label>
+            <ASN>64512</ASN>
             <Weight>1.00</Weight>
             <Properties>
                 <Property name="type">border</Property>
@@ -12,6 +13,7 @@
         </Node>
         <Node id="2">
             <Label>Router B</Label>
+            <ASN>64513</ASN>
             <Weight>0.85</Weight>
             <Properties>
                 <Property name="type">core</Property>
@@ -21,6 +23,7 @@
         </Node>
         <Node id="3">
             <Label>Router C</Label>
+            <ASN>64514</ASN>
             <Weight>0.90</Weight>
             <Properties>
                 <Property name="type">border</Property>
@@ -30,6 +33,7 @@
         </Node>
         <Node id="4">
             <Label>Router D</Label>
+            <ASN>64515</ASN>
             <Weight>0.95</Weight>
             <Properties>
                 <Property name="type">core</Property>
@@ -39,6 +43,7 @@
         </Node>
         <Node id="5">
             <Label>Router E</Label>
+            <ASN>64516</ASN>
             <Weight>0.80</Weight>
             <Properties>
                 <Property name="type">distribution</Property>
@@ -48,6 +53,7 @@
         </Node>
         <Node id="6">
             <Label>Router F</Label>
+            <ASN>64517</ASN>
             <Weight>0.75</Weight>
             <Properties>
                 <Property name="type">border</Property>

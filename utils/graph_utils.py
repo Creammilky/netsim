@@ -4,7 +4,6 @@ from pyvis.network import Network
 import networkx as nx
 import json
 
-
 class InteractiveNetwork:
     def __init__(self, G=None):
         self.G = G if G else nx.Graph()
