@@ -1,13 +1,18 @@
 import configparser
+from dotenv import load_dotenv
 import logging
 import os
 from datetime import datetime
 
-current_dir = os.pardir
-config = configparser.ConfigParser()
-config.read(current_dir + '/settings.ini')
-print(current_dir + '/settings.ini')
-logs_path = config.get('Log', 'path')
+load_dotenv()
+LOGS_PATH = os.getenv("LOGS_PATH")
+TERMINAL_LEVEL = os.getenv("TERMINAL_LEVEL")
+FILE_LEVEL = os.getenv("FILE_LEVEL")
+
+# current_dir = os.pardir
+# config = configparser.ConfigParser()
+# config.read(current_dir + '/settings.ini')
+# LOGS_PATH = config.get('Log', 'path')
 
 class Logger:
     create_time: str = None
@@ -21,13 +26,13 @@ class Logger:
         self.logger.setLevel(logging.DEBUG)
         self.create_time = Logger.current()
         self.logger_file_name = '/%s.log' % self.create_time  # self.create_time里面有冒号，Windows文件名不支持冒号
-        self.logger_file_path = logs_path
+        self.logger_file_path = LOGS_PATH
         # 创建文件处理器
         file_handler = logging.FileHandler(self.logger_file_path + self.logger_file_name)
-        file_handler.setLevel(logging.INFO)
+        file_handler.setLevel(FILE_LEVEL)
         # 创建控制台处理器
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
+        console_handler.setLevel(TERMINAL_LEVEL)
         # 创建格式化器
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         # 将格式化器添加到处理器中
@@ -56,9 +61,3 @@ class Logger:
 
     def critical(self, crt_msg):
         self.logger.critical(msg= f"[{self.log_from}]: {crt_msg}")
-
-    # logger.debug('This is a debug message')
-    # logger.info('This is an info message')
-    # logger.warning('This is a warning message')
-    # logger.error('This is an error message')
-    # logger.critical('This is a critical message')

@@ -15,14 +15,14 @@ class Property:
 @dataclass
 class Node:
     id: str
-    label: str
+    group: str
     weight: float
     ASN: int
     properties: List[Property]
 
     def get_attr(self) -> dict:
         return {"id": self.id,
-                "label": self.label,
+                "group": self.group,
                 "weight": self.weight,
                 "ASN": self.ASN,
                 "properties": self.properties}
@@ -57,7 +57,7 @@ class GraphParser:
     def _parse_nodes(self):
         for node_elem in self.root.findall('./Nodes/Node'):
             node_id = node_elem.get('id')
-            label = node_elem.find('Label').text
+            group = node_elem.find('Label').text
             weight = float(node_elem.find('Weight').text) if node_elem.find('Weight') is not None else None
             ASN = node_elem.find('ASN').text
             properties = []
@@ -69,7 +69,7 @@ class GraphParser:
 
             self.nodes[node_id] = Node(
                 id=node_id,
-                label=label,
+                group=group,
                 weight=weight,
                 ASN = ASN,
                 properties=properties
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     # Print all nodes and their weights
     print("Nodes:")
     for node_id, node in parser.nodes.items():
-        print(f"ID: {node_id}, Label: {node.label}, Weight: {node.weight}")
+        print(f"ID: {node_id}, Label: {node.group}, Weight: {node.weight}")
 
     # Print all edges
     print("\nEdges:")
@@ -156,6 +156,10 @@ if __name__ == "__main__":
         print(f"{g_deg}")
     # ASN = nx.get_node_attributes(G, "ASN")
     # print(ASN)
+    for u,v in G.edges():
+        print([u,v])
+    print("--------------------------------\n\n\n")
+    print({node: G.nodes[node] for node in G.nodes})
     clab_yaml_gen.gen_clab_yaml_from_nx(G)
     #interactive_net = graph_utils.InteractiveNetwork(G)
     #interactive_net.create_interactive_graph().show('../network.html', notebook=False)

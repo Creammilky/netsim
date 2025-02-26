@@ -2,8 +2,6 @@ import random
 import ipaddress
 import os
 
-IP_STORAGE_FILE = "used_ips.txt"
-
 def is_valid_cidr(prefix):
     """
     Check if the given prefix is a valid CIDR format.
@@ -43,7 +41,7 @@ def prefix_to_cidr(prefix):
         else:
             raise ValueError("Invalid prefix format. The prefix must have 2, 3, or 4 parts.")
 
-def load_used_ips(prefix=None):
+def load_used_ips(prefix=None, IP_STORAGE_FILE="./used_ips"):
     """Load previously generated IPs from a file and optionally count the ones under a given prefix"""
     if os.path.exists(IP_STORAGE_FILE):
         with open(IP_STORAGE_FILE, "r") as f:
@@ -59,13 +57,13 @@ def load_used_ips(prefix=None):
     return set()
 
 
-def save_used_ips(ips):
+def save_used_ips(ips, IP_STORAGE_FILE="./used_ips"):
     """Save newly generated IPs to the file."""
     with open(IP_STORAGE_FILE, "a") as f:
         f.writelines(ip + "\n" for ip in ips)
 
 
-def generate_random_ipv4(prefix=None, count=1):
+def generate_random_ipv4(prefix=None, count=1, IP_STORAGE_FILE="./used_ips"):
     """
     Generate unique random IPv4 addresses with an optional prefix.
 
@@ -76,7 +74,7 @@ def generate_random_ipv4(prefix=None, count=1):
     if count < 1:
         raise ValueError("Count must be at least 1.")
 
-    used_ips = load_used_ips(prefix)
+    used_ips = load_used_ips(prefix, IP_STORAGE_FILE=IP_STORAGE_FILE)
     generated_ips = set()  # Temporary set for this function call
 
     if prefix:
@@ -111,7 +109,7 @@ def generate_random_ipv4(prefix=None, count=1):
                 generated_ips.add(ip)
 
     # Save generated IPs and return the result
-    save_used_ips(generated_ips)
+    save_used_ips(generated_ips, IP_STORAGE_FILE=IP_STORAGE_FILE)
     return list(generated_ips) if count > 1 else next(iter(generated_ips))
 
 
