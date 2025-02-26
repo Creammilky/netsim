@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-from api.xml_parser import GraphParser
+from utils.xml_parser import GraphParser
 from utils.graph_utils import InteractiveNetwork
 
 app = Flask(__name__)

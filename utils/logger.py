@@ -29,10 +29,10 @@ class Logger:
         self.logger_file_path = LOGS_PATH
         # 创建文件处理器
         file_handler = logging.FileHandler(self.logger_file_path + self.logger_file_name)
-        file_handler.setLevel(FILE_LEVEL)
+        file_handler.setLevel(logging.INFO)
         # 创建控制台处理器
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(TERMINAL_LEVEL)
+        console_handler.setLevel(logging.DEBUG)
         # 创建格式化器
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         # 将格式化器添加到处理器中

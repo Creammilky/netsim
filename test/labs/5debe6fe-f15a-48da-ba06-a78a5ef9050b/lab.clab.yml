@@ -1,0 +1,72 @@
+# This is a data centre topology using FRRouting
+name: fdc
+
+topology:
+  defaults:
+    kind: linux
+    image: wbitt/network-multitool:alpine-extra
+
+  nodes:
+    1:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+		- config/1:/etc/frr
+      mgmt-ipv4: 172.1.1.207
+      group: Router A
+    2:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+		- config/2:/etc/frr
+      mgmt-ipv4: 172.1.1.21
+      group: Router B
+    3:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+		- config/3:/etc/frr
+      mgmt-ipv4: 172.1.1.194
+      group: Router C
+    4:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+		- config/4:/etc/frr
+      mgmt-ipv4: 172.1.1.192
+      group: Router D
+    5:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+		- config/5:/etc/frr
+      mgmt-ipv4: 172.1.1.201
+      group: Router E
+    6:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+		- config/6:/etc/frr
+      mgmt-ipv4: 172.1.1.55
+      group: Router F
+
+  links:
+    - endpoints:
+        - 1
+        - 2
+    - endpoints:
+        - 1
+        - 4
+    - endpoints:
+        - 2
+        - 4
+    - endpoints:
+        - 2
+        - 3
+    - endpoints:
+        - 3
+        - 6
+    - endpoints:
+        - 4
+        - 5
+    - endpoints:
+        - 4
+        - 6
+    - endpoints:
+        - 5
+        - 6
+    
