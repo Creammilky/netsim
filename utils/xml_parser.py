@@ -151,14 +151,20 @@ if __name__ == "__main__":
     # graph_utils.draw_networkx_graph_complex(G)
     for g_node, g_attr in G.nodes.items():
         print(f"{g_node}: {g_attr}")
-    for g_deg in G.degree():
-        print(f"{g_deg}")
+
     # ASN = nx.get_node_attributes(G, "ASN")
     # print(ASN)
-    for u,v in G.edges():
-        print([u,v])
-    print("--------------------------------\n\n\n")
-    print({node: G.nodes[node] for node in G.nodes})
+    #
+    # print("--------------------------------\n")
+    # print({node: G.nodes[node] for node in G.nodes})
+    # print("--------------------------------\n")
+    #
+    # print(nx.degree(G))
+    # print("--------------------------------\n")
+    # print(G.edges())
+
     generate_clab.gen_yaml_from_nx(G)
+
+
     #interactive_net = graph_utils.InteractiveNetwork(G)
     #interactive_net.create_interactive_graph().show('../network.html', notebook=False)
