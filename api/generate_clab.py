@@ -1,7 +1,7 @@
 import os
 import networkx as nx
 import uuid
-from jinja2 import Template
+from jinja2 import Template, Environment, FileSystemLoader
 from sympy.codegen.ast import Raise
 
 from utils import logger, ipv4_utils
@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize logger
-log = logger.Logger("clab")
+log = logger.Logger("clab.yml")
 
 # Fetch environment variables
 ROUTER_IMAGE = os.getenv("ROUTER_IMAGE")
@@ -20,6 +20,9 @@ if not ROUTER_IMAGE or not LABS_PATH:
     log.error("Required environment variables ROUTER_IMAGE or LABS_PATH are missing!")
     raise EnvironmentError("Required environment variables are missing!")
 
+# Fetch Jinja2 templates
+env = Environment(loader=FileSystemLoader('templates/clab'))
+template = env.get_template('clab.yaml.jinja2')
 
 def create_lab_dir(nodes: list):
     """
@@ -110,31 +113,11 @@ def gen_yaml_from_nx(G: nx.Graph):
         }
     }
 
-    # Jinja2 template for generating the YAML configuration
-    template_str = """\
-# This is a data centre topology using FRRouting
-name: {{ name }}
-
-topology:
-  defaults:
-    kind: {{ topology.defaults.kind }}
-    image: {{ topology.defaults.image }}
-
-  nodes:{%- for node, attributes in topology.nodes.items() %}
-    {{ node }}:{%- for key, value in attributes.items() %}
-      {{ key }}: {{ value }}{%- endfor %}
-    {%- endfor %}
-
-  links:{%- for link in topology.links %}
-    - endpoints: {{ link.endpoints | tojson }}{%- endfor %}
-    """
-
     # Render the template
-    template = Template(template_str)
     output = template.render(**topology)
 
     # Save the rendered YAML to a file
-    output_file = "lab.clab.yml"
+    output_file = "lab.clab.yaml"
     with open(os.path.join(CURRENT_LAB_PATH, output_file), "w") as f:
         f.write(output)
 

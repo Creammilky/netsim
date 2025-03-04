@@ -9,11 +9,6 @@ LOGS_PATH = os.getenv("LOGS_PATH")
 TERMINAL_LEVEL = os.getenv("TERMINAL_LEVEL")
 FILE_LEVEL = os.getenv("FILE_LEVEL")
 
-# current_dir = os.pardir
-# config = configparser.ConfigParser()
-# config.read(current_dir + '/settings.ini')
-# LOGS_PATH = config.get('Log', 'path')
-
 class Logger:
     create_time: str = None
     log_from: str = None

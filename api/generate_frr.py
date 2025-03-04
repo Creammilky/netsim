@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize logger
-log = logger.Logger("clab")
+log = logger.Logger("frr-config")
 
 # Fetch environment variables
 ROUTER_IMAGE = os.getenv("ROUTER_IMAGE")

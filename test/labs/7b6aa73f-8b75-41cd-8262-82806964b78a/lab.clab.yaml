@@ -1,0 +1,104 @@
+# This is a base template file for clab.yaml for each container lab
+name: fdc
+
+topology:
+  defaults:
+    kind: linux
+    image: wbitt/network-multitool:alpine-extra
+
+  nodes:
+    1:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/1:/etc/frr
+      mgmt-ipv4: 172.20.20.229
+      group: Router A
+    2:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/2:/etc/frr
+      mgmt-ipv4: 172.20.20.46
+      group: Router B
+    3:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/3:/etc/frr
+      mgmt-ipv4: 172.20.20.228
+      group: Router C
+    4:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/4:/etc/frr
+      mgmt-ipv4: 172.20.20.37
+      group: Router D
+    5:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/5:/etc/frr
+      mgmt-ipv4: 172.20.20.48
+      group: Router E
+    6:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/6:/etc/frr
+      mgmt-ipv4: 172.20.20.83
+      group: Router F
+    7:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/7:/etc/frr
+      mgmt-ipv4: 172.20.20.220
+      group: Router G
+    8:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/8:/etc/frr
+      mgmt-ipv4: 172.20.20.170
+      group: Router H
+    9:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/9:/etc/frr
+      mgmt-ipv4: 172.20.20.70
+      group: Router I
+    10:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/10:/etc/frr
+      mgmt-ipv4: 172.20.20.202
+      group: Router J
+    11:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/11:/etc/frr
+      mgmt-ipv4: 172.20.20.21
+      group: Router K
+    12:
+      image: quay.io/frrouting/frr:10.2.1
+      binds: 
+        - config/12:/etc/frr
+      mgmt-ipv4: 172.20.20.235
+      group: Router L
+
+  links:
+    - endpoints: ["1:eth1", "2:eth1"]
+    - endpoints: ["1:eth2", "4:eth1"]
+    - endpoints: ["1:eth3", "7:eth1"]
+    - endpoints: ["2:eth2", "4:eth2"]
+    - endpoints: ["2:eth3", "3:eth1"]
+    - endpoints: ["2:eth4", "12:eth1"]
+    - endpoints: ["3:eth2", "6:eth1"]
+    - endpoints: ["3:eth3", "9:eth1"]
+    - endpoints: ["4:eth3", "5:eth1"]
+    - endpoints: ["4:eth4", "6:eth2"]
+    - endpoints: ["4:eth5", "10:eth1"]
+    - endpoints: ["5:eth2", "6:eth3"]
+    - endpoints: ["5:eth3", "8:eth1"]
+    - endpoints: ["6:eth4", "9:eth2"]
+    - endpoints: ["7:eth2", "10:eth2"]
+    - endpoints: ["7:eth3", "8:eth2"]
+    - endpoints: ["7:eth4", "12:eth2"]
+    - endpoints: ["8:eth3", "11:eth1"]
+    - endpoints: ["9:eth3", "11:eth2"]
+    - endpoints: ["10:eth3", "12:eth3"]
+    - endpoints: ["10:eth4", "11:eth3"]

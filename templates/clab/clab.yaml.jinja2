@@ -1,0 +1,15 @@
+# This is a base template file for clab.yaml for each container lab
+name: {{ name }}
+
+topology:
+  defaults:
+    kind: {{ topology.defaults.kind }}
+    image: {{ topology.defaults.image }}
+
+  nodes:{%- for node, attributes in topology.nodes.items() %}
+    {{ node }}:{%- for key, value in attributes.items() %}
+      {{ key }}: {{ value }}{%- endfor %}
+    {%- endfor %}
+
+  links:{%- for link in topology.links %}
+    - endpoints: {{ link.endpoints | tojson }}{%- endfor %}

@@ -6,7 +6,7 @@
       "prefix": "clab",
       "mgmt": {
         "network": "clab",
-        "bridge": "br-456883dda823",
+        "bridge": "br-ef766f13688c",
         "ipv4-subnet": "172.20.20.0/24",
         "ipv4-gw": "172.20.20.1",
         "ipv6-subnet": "3fff:172:20:20::/64",
@@ -29,13 +29,13 @@
       "image": "wbitt/network-multitool:alpine-extra",
       "mgmt-net": "",
       "mgmt-intf": "",
-      "mgmt-ipv4-address": "172.20.20.5",
+      "mgmt-ipv4-address": "172.20.20.7",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::a",
+      "mgmt-ipv6-address": "3fff:172:20:20::c",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "server",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host11",
@@ -84,13 +84,13 @@
       "image": "wbitt/network-multitool:alpine-extra",
       "mgmt-net": "",
       "mgmt-intf": "",
-      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-address": "172.20.20.2",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::8",
+      "mgmt-ipv6-address": "3fff:172:20:20::7",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "server",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host12",
@@ -139,13 +139,13 @@
       "image": "wbitt/network-multitool:alpine-extra",
       "mgmt-net": "",
       "mgmt-intf": "",
-      "mgmt-ipv4-address": "172.20.20.6",
+      "mgmt-ipv4-address": "172.20.20.4",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::b",
+      "mgmt-ipv6-address": "3fff:172:20:20::9",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "server",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host21",
@@ -157,6 +157,12 @@
         "containerlab": "fdc"
       },
       "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        },
         {
           "host-ip": "",
           "host-port": 0,
@@ -174,12 +180,6 @@
           "host-port": 0,
           "port": 80,
           "protocol": "tcp"
-        },
-        {
-          "host-ip": "",
-          "host-port": 0,
-          "port": 11443,
-          "protocol": "tcp"
         }
       ]
     },
@@ -194,13 +194,13 @@
       "image": "wbitt/network-multitool:alpine-extra",
       "mgmt-net": "",
       "mgmt-intf": "",
-      "mgmt-ipv4-address": "172.20.20.4",
+      "mgmt-ipv4-address": "172.20.20.5",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::9",
+      "mgmt-ipv6-address": "3fff:172:20:20::a",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "server",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host22",
@@ -249,13 +249,13 @@
       "image": "wbitt/network-multitool:alpine-extra",
       "mgmt-net": "",
       "mgmt-intf": "",
-      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-address": "172.20.20.3",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::7",
+      "mgmt-ipv6-address": "3fff:172:20:20::8",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "server",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host31",
@@ -267,6 +267,12 @@
         "containerlab": "fdc"
       },
       "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        },
         {
           "host-ip": "",
           "host-port": 0,
@@ -284,12 +290,6 @@
           "host-port": 0,
           "port": 443,
           "protocol": "tcp"
-        },
-        {
-          "host-ip": "",
-          "host-port": 0,
-          "port": 80,
-          "protocol": "tcp"
         }
       ]
     },
@@ -304,13 +304,13 @@
       "image": "wbitt/network-multitool:alpine-extra",
       "mgmt-net": "",
       "mgmt-intf": "",
-      "mgmt-ipv4-address": "172.20.20.7",
+      "mgmt-ipv4-address": "172.20.20.6",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::c",
+      "mgmt-ipv6-address": "3fff:172:20:20::b",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "server",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/host32",
@@ -361,11 +361,11 @@
       "mgmt-intf": "",
       "mgmt-ipv4-address": "172.20.20.21",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::4",
+      "mgmt-ipv6-address": "3fff:172:20:20::2",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "leaf",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf01",
@@ -392,11 +392,11 @@
       "mgmt-intf": "",
       "mgmt-ipv4-address": "172.20.20.22",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::2",
+      "mgmt-ipv6-address": "3fff:172:20:20::3",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "leaf",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf02",
@@ -423,11 +423,11 @@
       "mgmt-intf": "",
       "mgmt-ipv4-address": "172.20.20.23",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::6",
+      "mgmt-ipv6-address": "3fff:172:20:20::4",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "leaf",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/leaf03",
@@ -454,11 +454,11 @@
       "mgmt-intf": "",
       "mgmt-ipv4-address": "172.20.20.11",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::3",
+      "mgmt-ipv6-address": "3fff:172:20:20::5",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "spine",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/spine01",
@@ -485,11 +485,11 @@
       "mgmt-intf": "",
       "mgmt-ipv4-address": "172.20.20.12",
       "mgmt-ipv4-prefix-length": 24,
-      "mgmt-ipv6-address": "3fff:172:20:20::5",
+      "mgmt-ipv6-address": "3fff:172:20:20::6",
       "mgmt-ipv6-prefix-length": 64,
       "mac-address": "",
       "labels": {
-        "clab-mgmt-net-bridge": "br-456883dda823",
+        "clab-mgmt-net-bridge": "br-ef766f13688c",
         "clab-node-group": "spine",
         "clab-node-kind": "linux",
         "clab-node-lab-dir": "/home/carl/Projects/netsim/templates/clab-bgp-frr-master/clab-fdc/spine02",
@@ -509,13 +509,13 @@
       "a": {
         "node": "spine01",
         "interface": "eth1",
-        "mac": "aa:c1:ab:70:46:f3",
+        "mac": "aa:c1:ab:6c:15:1f",
         "peer": "z"
       },
       "z": {
         "node": "leaf01",
         "interface": "eth1",
-        "mac": "aa:c1:ab:20:96:32",
+        "mac": "aa:c1:ab:70:11:0a",
         "peer": "a"
       }
     },
@@ -523,13 +523,13 @@
       "a": {
         "node": "spine01",
         "interface": "eth2",
-        "mac": "aa:c1:ab:ac:b1:b7",
+        "mac": "aa:c1:ab:ae:11:5a",
         "peer": "z"
       },
       "z": {
         "node": "leaf02",
         "interface": "eth1",
-        "mac": "aa:c1:ab:9d:b9:6c",
+        "mac": "aa:c1:ab:b2:80:23",
         "peer": "a"
       }
     },
@@ -537,13 +537,13 @@
       "a": {
         "node": "spine01",
         "interface": "eth3",
-        "mac": "aa:c1:ab:e8:23:b8",
+        "mac": "aa:c1:ab:0b:b3:55",
         "peer": "z"
       },
       "z": {
         "node": "leaf03",
         "interface": "eth1",
-        "mac": "aa:c1:ab:64:9f:97",
+        "mac": "aa:c1:ab:f6:1a:c1",
         "peer": "a"
       }
     },
@@ -551,13 +551,13 @@
       "a": {
         "node": "spine02",
         "interface": "eth1",
-        "mac": "aa:c1:ab:f2:05:7d",
+        "mac": "aa:c1:ab:3c:8b:c4",
         "peer": "z"
       },
       "z": {
         "node": "leaf01",
         "interface": "eth2",
-        "mac": "aa:c1:ab:7d:8e:1c",
+        "mac": "aa:c1:ab:95:db:13",
         "peer": "a"
       }
     },
@@ -565,13 +565,13 @@
       "a": {
         "node": "spine02",
         "interface": "eth2",
-        "mac": "aa:c1:ab:bf:de:d6",
+        "mac": "aa:c1:ab:83:d3:56",
         "peer": "z"
       },
       "z": {
         "node": "leaf02",
         "interface": "eth2",
-        "mac": "aa:c1:ab:14:61:03",
+        "mac": "aa:c1:ab:0f:79:ab",
         "peer": "a"
       }
     },
@@ -579,13 +579,13 @@
       "a": {
         "node": "spine02",
         "interface": "eth3",
-        "mac": "aa:c1:ab:f1:6f:70",
+        "mac": "aa:c1:ab:1a:d7:fb",
         "peer": "z"
       },
       "z": {
         "node": "leaf03",
         "interface": "eth2",
-        "mac": "aa:c1:ab:42:0c:b4",
+        "mac": "aa:c1:ab:70:7b:30",
         "peer": "a"
       }
     },
@@ -593,13 +593,13 @@
       "a": {
         "node": "host11",
         "interface": "eth1",
-        "mac": "aa:c1:ab:fe:2d:36",
+        "mac": "aa:c1:ab:c8:ed:be",
         "peer": "z"
       },
       "z": {
         "node": "leaf01",
         "interface": "eth3",
-        "mac": "aa:c1:ab:d1:a3:9d",
+        "mac": "aa:c1:ab:3a:1d:bd",
         "peer": "a"
       }
     },
@@ -607,13 +607,13 @@
       "a": {
         "node": "host12",
         "interface": "eth1",
-        "mac": "aa:c1:ab:95:47:92",
+        "mac": "aa:c1:ab:e9:1a:21",
         "peer": "z"
       },
       "z": {
         "node": "leaf01",
         "interface": "eth4",
-        "mac": "aa:c1:ab:3d:8b:91",
+        "mac": "aa:c1:ab:a6:78:2f",
         "peer": "a"
       }
     },
@@ -621,13 +621,13 @@
       "a": {
         "node": "host21",
         "interface": "eth1",
-        "mac": "aa:c1:ab:6b:48:13",
+        "mac": "aa:c1:ab:60:97:94",
         "peer": "z"
       },
       "z": {
         "node": "leaf02",
         "interface": "eth3",
-        "mac": "aa:c1:ab:3c:f8:2f",
+        "mac": "aa:c1:ab:38:8e:8c",
         "peer": "a"
       }
     },
@@ -635,13 +635,13 @@
       "a": {
         "node": "host22",
         "interface": "eth1",
-        "mac": "aa:c1:ab:63:0a:0c",
+        "mac": "aa:c1:ab:ae:ea:c6",
         "peer": "z"
       },
       "z": {
         "node": "leaf02",
         "interface": "eth4",
-        "mac": "aa:c1:ab:a4:49:dd",
+        "mac": "aa:c1:ab:94:af:ec",
         "peer": "a"
       }
     },
@@ -649,13 +649,13 @@
       "a": {
         "node": "host31",
         "interface": "eth1",
-        "mac": "aa:c1:ab:4b:8e:25",
+        "mac": "aa:c1:ab:79:89:51",
         "peer": "z"
       },
       "z": {
         "node": "leaf03",
         "interface": "eth3",
-        "mac": "aa:c1:ab:02:40:93",
+        "mac": "aa:c1:ab:18:43:bf",
         "peer": "a"
       }
     },
@@ -663,13 +663,13 @@
       "a": {
         "node": "host32",
         "interface": "eth1",
-        "mac": "aa:c1:ab:e4:01:e4",
+        "mac": "aa:c1:ab:83:f2:aa",
         "peer": "z"
       },
       "z": {
         "node": "leaf03",
         "interface": "eth4",
-        "mac": "aa:c1:ab:e9:ee:da",
+        "mac": "aa:c1:ab:99:5a:a0",
         "peer": "a"
       }
     }

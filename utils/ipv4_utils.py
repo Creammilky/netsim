@@ -63,11 +63,12 @@ def save_used_ips(ips, IP_STORAGE_FILE="./used_ips"):
         f.writelines(ip + "\n" for ip in ips)
 
 
-def generate_random_ipv4(prefix=None, count=1, IP_STORAGE_FILE="./used_ips"):
+def generate_random_ipv4(prefix="172.20.20.", count=1, IP_STORAGE_FILE="./used_ips"):
     """
     Generate unique random IPv4 addresses with an optional prefix.
 
-    :param prefix: The prefix of the IPv4 address (e.g., "192.168.1.", "10.0.")
+    :param prefix: The prefix of the IPv4 address (e.g., "192.168.1.", "10.0.").
+    However, default value is '172.20.20.0/24' because it is container-lab's default prefix.
     :param count: Number of unique IPs to generate (default: 1).
     :return: A single IP string if count=1, or a list of IP strings if count > 1.
     """
