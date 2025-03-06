@@ -14,3 +14,4 @@ also consider Container-net, can use container as a host, including frr
 For frr.conf
 
 - **'eth0'** cannot use for peer-links in frr devices, because it is reserved for and used by container lab **'mgmt-ipv4'**
+- God, I haven't really know how to write a frr.conf yet...

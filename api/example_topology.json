@@ -1,0 +1,87 @@
+{
+  "nodes": [
+    {
+      "name": "spine01",
+      "type": "spine",
+      "id": 1
+    },
+    {
+      "name": "spine02",
+      "type": "spine",
+      "id": 2
+    },
+    {
+      "name": "leaf01",
+      "type": "leaf",
+      "id": 21
+    },
+    {
+      "name": "leaf02",
+      "type": "leaf",
+      "id": 22
+    },
+    {
+      "name": "host11",
+      "type": "host",
+      "id": 111
+    },
+    {
+      "name": "host12",
+      "type": "host",
+      "id": 112
+    }
+  ],
+  "links": [
+    {
+      "source": "spine01",
+      "target": "leaf01",
+      "subnet": "10.1.1.0/30"
+    },
+    {
+      "source": "spine01",
+      "target": "leaf02",
+      "subnet": "10.1.1.4/30"
+    },
+    {
+      "source": "spine02",
+      "target": "leaf01",
+      "subnet": "10.1.1.8/30"
+    },
+    {
+      "source": "spine02",
+      "target": "leaf02",
+      "subnet": "10.1.1.12/30"
+    },
+    {
+      "source": "leaf01",
+      "target": "host11",
+      "subnet": "192.168.11.0/24"
+    },
+    {
+      "source": "leaf01",
+      "target": "host12",
+      "subnet": "192.168.12.0/24"
+    }
+  ],
+  "autonomous_systems": [
+    {
+      "asn": 65000,
+      "nodes": [
+        "spine01",
+        "spine02"
+      ]
+    },
+    {
+      "asn": 65001,
+      "nodes": [
+        "leaf01"
+      ]
+    },
+    {
+      "asn": 65002,
+      "nodes": [
+        "leaf02"
+      ]
+    }
+  ]
+}
