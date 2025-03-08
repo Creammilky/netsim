@@ -15,3 +15,11 @@ For frr.conf
 
 - **'eth0'** cannot use for peer-links in frr devices, because it is reserved for and used by container lab **'mgmt-ipv4'**
 - God, I haven't really know how to write a frr.conf yet...
+
+### How to refresh a lab or hot-modification
+
+**BMP**
+\
+Fetch BGP updates... info from peer(A frr server or other router) but sending message to control/modify
+\
+TCP connection

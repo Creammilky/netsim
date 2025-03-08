@@ -1,5 +1,41 @@
 frr version 8.1_git
 frr defaults traditional
+hostname {{ hostname }}
+no ipv6 forwarding
+!
+{% for interface in interfaces %}
+interface {{ interface.name }}
+{% if interface.ip %}
+ ip address {{ interface.ip }}
+{% endif %}
+exit
+!
+{% endfor %}
+router bgp {{ asn }}
+ bgp router-id {{ router_id }}
+ bgp log-neighbor-changes
+ no bgp ebgp-requires-policy
+ timers bgp {{ keepalive }} {{ holdtime }}
+{% for peer_group in peer_groups %}
+ neighbor {{ peer_group.name }} peer-group
+ neighbor {{ peer_group.name }} remote-as {{ peer_group.remote_as }}
+ neighbor {{ peer_group.name }} advertisement-interval 0
+{% for neighbor in peer_group.neighbors %}
+ neighbor {{ neighbor }} interface peer-group {{ peer_group.name }}
+{% endfor %}
+{% endfor %}
+ !
+ address-family ipv4 unicast
+{% for network in networks %}
+  network {{ network }}
+{% endfor %}
+ exit-address-family
+exit
+!
+
+{#
+frr version 8.1_git
+frr defaults traditional
 hostname leaf1
 no ipv6 forwarding
 !
@@ -32,3 +68,4 @@ router bgp 65001
  exit-address-family
 exit
 !
+#}
