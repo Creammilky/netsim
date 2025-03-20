@@ -27,7 +27,7 @@ class Logger:
         file_handler.setLevel(logging.INFO)
         # 创建控制台处理器
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
+        console_handler.setLevel(logging.INFO)
         # 创建格式化器
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         # 将格式化器添加到处理器中

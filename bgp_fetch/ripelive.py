@@ -7,7 +7,66 @@ If you use the 'websockets' package instead (Python 3 only) you will need to cha
 """
 import json
 import websocket
-from utils.ipv4_utils import is_ipv4
+from utils.ipv4_utils import is_ipv4, is_ipv6
+from utils import logger
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize logger
+log = logger.Logger("ripelive")
+
+def ripe_filter(datum, ip_type: int = None, hosts: list = None):
+    if hosts is not None:
+        result = ripe_host_filter(datum, hosts)
+        if result is None:
+            return None
+    if ip_type is not None:
+        result = ripe_ip_filter(datum, ip_type)
+        if result is None:
+            return None
+    return datum
+
+def ripe_ip_filter(datum, ip_type):
+    ip_addr = datum.get("peer")
+    if ip_type==4:
+        if is_ipv4(ip_addr) is True:
+            return datum
+        else:
+            return None
+    if ip_type==6:
+        if is_ipv6(ip_addr) is True:
+            return datum
+        else:
+            return None
+    else:
+        log.error(f"Unsupported IP type: {ip_type}")
+        raise Exception(f"Unsupported IP type: {ip_type}")
+
+def ripe_host_filter(datum, hosts):
+    ripe_hosts = ["ALL", "all" ,"rrc00.ripe.net", "rrc01.ripe.net"
+        , "rrc03.ripe.net", "rrc04.ripe.net", "rrc05.ripe.net", "rrc06.ripe.net", "rrc07.ripe.net"
+        , "rrc10.ripe.net", "rrc11.ripe.net", "rrc12.ripe.net", "rrc13.ripe.net", "rrc14.ripe.net", "rrc15.ripe.net"
+        , "rrc16.ripe.net"
+        , "rrc18.ripe.net", "rrc19.ripe.net", "rrc20.ripe.net", "rrc21.ripe.net"
+        , "rrc22.ripe.net", "rrc23.ripe.net", "rrc24.ripe.net", "rrc25.ripe.net", "rrc26.ripe.net"]
+
+    host_filter = []
+
+    for host in hosts:
+        if host not in ripe_hosts:
+            log.warning("Skipping filter host:{}".format(host))
+        else:
+            log.debug("Apply filter host:{}".format(host))
+            host_filter.append(host)
+
+    host = datum.get("host")
+    if host in host_filter:
+        return datum
+    else:
+        return None
+
 
 ws = websocket.WebSocket()
 ws.connect("wss://ris-live.ripe.net/v1/ws/?client=py-example-1")
@@ -24,16 +83,17 @@ ws.send(json.dumps({
 }))
 for data in ws:
     parsed = json.loads(data)
-    if is_ipv4(parsed["data"]["peer"]):
-        data = {
-            "peer": parsed["data"].get("peer"),
-            "peer_asn": parsed["data"].get("peer_asn"),
-            "host": parsed["data"].get("host"),
-            "type": parsed["data"].get("type"),
-            "path": parsed["data"].get("path"),
-            "origin": parsed["data"].get("origin"),
-            "announcements": parsed["data"].get("announcements", []),  # 如果没有，默认空列表
-            "withdrawals": parsed["data"].get("withdrawals", []),  # 如果没有，默认空列表
-        }
+    data = {
+        "peer": parsed["data"].get("peer"),
+        "peer_asn": parsed["data"].get("peer_asn"),
+        "host": parsed["data"].get("host"),
+        "type": parsed["data"].get("type"),
+        "path": parsed["data"].get("path"),
+        "origin": parsed["data"].get("origin"),
+        "announcements": parsed["data"].get("announcements", []),  # 如果没有，默认空列表
+        "withdrawals": parsed["data"].get("withdrawals", []),  # 如果没有，默认空列表
+    }
+    result = ripe_filter(data, 4, ["rrc00.ripe.net", "rrc03.ripe.net", "rrc04.ripe.net"])
+    if result is not None:
+        print(result)
 
-        print(data)
