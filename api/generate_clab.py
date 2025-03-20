@@ -24,7 +24,7 @@ if not ROUTER_IMAGE or not LABS_PATH:
 env = Environment(loader=FileSystemLoader('templates/clab'))
 template = env.get_template('clab.yaml.jinja2')
 
-def create_lab_dir(nodes: list):
+def create_lab_dir(nodes: list, CURRENT_LAB_PATH):
     """
     Create directories for the lab setup.
     """
@@ -34,7 +34,7 @@ def create_lab_dir(nodes: list):
         os.makedirs(os.path.join(CURRENT_LAB_PATH, 'config', str(node)), exist_ok=True)
 
 
-def make_yaml_info_from_nodes(G: nx.Graph):
+def make_yaml_info_from_nodes(G: nx.Graph, CURRENT_LAB_PATH):
     """
     Create YAML info from the NetworkX graph G.
     """
@@ -42,11 +42,12 @@ def make_yaml_info_from_nodes(G: nx.Graph):
     node_deg = G.degree()
     node_num = G.number_of_nodes()
     nodes = {}
-    selected_keys = ["group", ]
+    selected_keys = []
 
     # Generate IP pool based on the number of nodes
     # Remember
-    ip_pool = ipv4_utils.generate_random_ipv4(prefix="172.20.20.", count=node_num,
+    #Todo:think about ip prefix setting and container lab
+    ip_pool = ipv4_utils.generate_random_ipv4(prefix="", count=node_num,
                                               IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'used_ips'))
     index = 0
 
@@ -71,7 +72,9 @@ def make_yaml_info_from_edges(G: nx.Graph):
     for u, v in G.edges(data=False):
         if u == v:
             log.error(f"Edge [{u},{v}] are Loopback in network topology")
-            raise Exception("Loopback found in network topology")
+            # Todo: How to deal with loopback
+
+            # raise Exception("Loopback found in network topology")
         elif not G.has_edge(u, v):
             log.error(f"Edge [{u},{v}] not found network topology")
             raise Exception("Unexpected edge found in network topology")
@@ -89,15 +92,15 @@ def make_yaml_info_from_edges(G: nx.Graph):
             edges.append((u_eth, v_eth))
     return edges
 
-def gen_yaml_from_nx(G: nx.Graph):
+def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH):
     """
     Generate YAML from NetworkX graph and save to file.
     """
     # Create the lab directory structure
-    create_lab_dir(list(G.nodes()))
+    create_lab_dir(list(G.nodes()), CURRENT_LAB_PATH)
 
     # Prepare node information for the YAML
-    nodes = make_yaml_info_from_nodes(G)
+    nodes = make_yaml_info_from_nodes(G, CURRENT_LAB_PATH)
     edges = make_yaml_info_from_edges(G)
 
     # Prepare topology information for Jinja2 template rendering
@@ -124,5 +127,4 @@ def gen_yaml_from_nx(G: nx.Graph):
     log.info(f"Topology saved to {output_file}")
 
 
-# Generate CURRENT_LAB_PATH dynamically based on the lab
-CURRENT_LAB_PATH = os.path.join(LABS_PATH, str(uuid.uuid4()))
+

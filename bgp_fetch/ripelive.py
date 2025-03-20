@@ -17,7 +17,7 @@ load_dotenv()
 # Initialize logger
 log = logger.Logger("ripelive")
 
-def ripe_filter(datum, ip_type: int = None, hosts: list = None):
+def ripe_filter(datum, ip_type: int = 10, hosts: list = None):
     if hosts is not None:
         result = ripe_host_filter(datum, hosts)
         if result is None:
@@ -40,6 +40,8 @@ def ripe_ip_filter(datum, ip_type):
             return datum
         else:
             return None
+    if ip_type==10:
+        return datum
     else:
         log.error(f"Unsupported IP type: {ip_type}")
         raise Exception(f"Unsupported IP type: {ip_type}")
@@ -67,6 +69,23 @@ def ripe_host_filter(datum, hosts):
     else:
         return None
 
+def ripe_msg_type_filter(datum, msg_type):
+    msg_types = ["UPDATE", "OPEN", "NOTIFICATION","KEEPALIVE"]
+
+    message_type_filter = []
+
+    for _type in msg_type:
+        if _type not in msg_types:
+            log.warning("Skipping filter host:{}".format(_type))
+        else:
+            log.debug("Apply filter host:{}".format(_type))
+            message_type_filter.append(_type)
+
+    _type = datum.get("type")
+    if _type in message_type_filter:
+        return datum
+    else:
+        return None
 
 ws = websocket.WebSocket()
 ws.connect("wss://ris-live.ripe.net/v1/ws/?client=py-example-1")
