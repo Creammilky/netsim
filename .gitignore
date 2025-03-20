@@ -1,0 +1,45 @@
+# 忽略 PyCharm 相关文件
+.idea/
+
+# 忽略 Python 编译生成的文件
+__pycache__/
+*.py[cod]
+
+# 忽略虚拟环境
+venv/
+env/
+
+# 忽略依赖安装目录（如果使用 Pipenv）
+Pipfile
+Pipfile.lock
+
+# 忽略 poetry 相关文件（如果使用 Poetry）
+poetry.lock
+
+# 忽略 Jupyter Notebook 编译的输出文件
+.ipynb_checkpoints/
+
+# 忽略日志文件
+logs/
+*.log
+
+# 忽略测试覆盖率、性能分析文件
+.coverage
+.tox/
+nosetests.xml
+pytest_cache/
+
+# 忽略 Docker 相关文件（如果适用）
+.dockerignore
+
+# 忽略环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 忽略 IDE、操作系统相关文件
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
