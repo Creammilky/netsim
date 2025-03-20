@@ -1,4 +1,4 @@
-from utils import xml_parser
+from utils import xml_parser, graph_utils
 from api import generate_clab
 # Usage example
 if __name__ == "__main__":
@@ -35,5 +35,5 @@ if __name__ == "__main__":
     generate_clab.gen_yaml_from_nx(G)
 
 
-    #interactive_net = graph_utils.InteractiveNetwork(G)
-    #interactive_net.create_interactive_graph().show('../network.html', notebook=False)
+    interactive_net = graph_utils.InteractiveNetwork(G)
+    interactive_net.create_interactive_graph().show('../network.html', notebook=False)

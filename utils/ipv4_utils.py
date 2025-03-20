@@ -2,6 +2,30 @@ import random
 import ipaddress
 import os
 
+def is_ipv4(ip):
+    ip_type = check_ip_version(ip)
+    if ip_type==4:
+        return True
+    else:
+        return False
+
+def is_ipv6(ip):
+    ip_type = check_ip_version(ip)
+    if ip_type==6:
+        return True
+    else:
+        return False
+
+def check_ip_version(ip):
+    try:
+        ip_obj = ipaddress.ip_address(ip)
+        if isinstance(ip_obj, ipaddress.IPv4Address):
+            return 4
+        elif isinstance(ip_obj, ipaddress.IPv6Address):
+            return 6
+    except ValueError:
+        return 0
+
 def is_valid_cidr(prefix):
     """
     Check if the given prefix is a valid CIDR format.

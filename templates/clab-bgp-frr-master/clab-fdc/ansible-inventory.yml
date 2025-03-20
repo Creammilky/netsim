@@ -10,15 +10,15 @@ all:
         clab-fdc-host11:
           ansible_host: 172.20.20.7
         clab-fdc-host12:
-          ansible_host: 172.20.20.2
+          ansible_host: 172.20.20.6
         clab-fdc-host21:
           ansible_host: 172.20.20.4
         clab-fdc-host22:
-          ansible_host: 172.20.20.5
+          ansible_host: 172.20.20.2
         clab-fdc-host31:
-          ansible_host: 172.20.20.3
+          ansible_host: 172.20.20.5
         clab-fdc-host32:
-          ansible_host: 172.20.20.6
+          ansible_host: 172.20.20.3
         clab-fdc-leaf01:
           ansible_host: 172.20.20.21
         clab-fdc-leaf02:

@@ -1,4 +1,4 @@
-frr version 8.1_git
+frr version {{ frr_version }}
 frr defaults traditional
 hostname {{ hostname }}
 no ipv6 forwarding
@@ -11,6 +11,7 @@ interface {{ interface.name }}
 exit
 !
 {% endfor %}
+
 router bgp {{ asn }}
  bgp router-id {{ router_id }}
  bgp log-neighbor-changes
