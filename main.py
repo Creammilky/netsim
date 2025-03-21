@@ -2,7 +2,7 @@ from api import topology, create_lab
 import os
 
 import uuid
-from utils import logger, ipv4_utils
+from utils import logger, ipv4_utils, xml_parser
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -23,8 +23,8 @@ if __name__ == "__main__":
     # Generate CURRENT_LAB_PATH dynamically based on the lab
     CURRENT_LAB_PATH = os.path.join(LABS_PATH, str(uuid.uuid4()))
 
-    # parser = xml_parser.GraphParser("test/route-xmls/route_complex_1.xml")
-    # parser.parse()
+    parser = xml_parser.GraphParser("test/route-xmls/route_complex_1.xml")
+    parser.parse()
     #
     # # Print all nodes and their weights
     # print("Nodes:")
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # for edge in parser.edges:
     #     print(f"{edge.source} -> {edge.target} (Weight: {edge.weight}, Type: {edge.type})")
     #
-    # G = parser.get_networkx()
+    G_xml = parser.get_networkx()
     # # graph_utils.draw_networkx_graph(G)
     # # graph_utils.draw_networkx_graph_complex(G)
     # for g_node, g_attr in G.nodes.items():
@@ -52,5 +52,5 @@ if __name__ == "__main__":
     # print("--------------------------------\n")
     # print(G.edges())
 
-    G = topology.bgp_to_networkx('test/ripe_output_bak.txt')
-    create_lab.create_lab_instance(G, CURRENT_LAB_PATH)
+    G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
+    create_lab.create_lab_instance(G_updates, CURRENT_LAB_PATH)

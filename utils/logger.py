@@ -49,7 +49,7 @@ class Logger:
         self.logger.info(msg= f"[{self.log_from}]: {info_msg}")
 
     def warning(self, warn_msg):
-        self.logger.info(msg= f"[{self.log_from}]: {warn_msg}")
+        self.logger.warning(msg= f"[{self.log_from}]: {warn_msg}")
 
     def error(self, err_msg):
         self.logger.error(msg= f"[{self.log_from}]: {err_msg}")
