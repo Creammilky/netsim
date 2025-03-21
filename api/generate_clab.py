@@ -71,7 +71,7 @@ def make_yaml_info_from_edges(G: nx.Graph):
     print(eth_count)
     for u, v in G.edges(data=False):
         if u == v:
-            log.error(f"Edge [{u},{v}] are Loopback in network topology")
+            log.warning(f"Edge [{u},{v}] are Loopback in network topology")
             # Todo: How to deal with loopback
 
             # raise Exception("Loopback found in network topology")

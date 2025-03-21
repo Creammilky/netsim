@@ -52,5 +52,5 @@ if __name__ == "__main__":
     # print("--------------------------------\n")
     # print(G.edges())
 
-    G = topology.bgp_to_networkx('test/ripe_output.txt')
+    G = topology.bgp_to_networkx('test/ripe_output_bak.txt')
     create_lab.create_lab_instance(G, CURRENT_LAB_PATH)

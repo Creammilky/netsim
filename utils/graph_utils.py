@@ -17,7 +17,22 @@ class InteractiveNetwork:
         H = nx.Graph()
 
         # 处理节点
+        # 计算度的最大最小值，用于归一化
+        degrees = dict(self.G.degree())
+        max_degree = max(degrees.values()) if degrees else 1
+        min_degree = min(degrees.values()) if degrees else 0
+
         for node, attrs in self.G.nodes(data=True):
+            # 计算节点度
+            node_degree = degrees.get(node, 0)
+
+            # 归一化计算 size，避免过小或过大
+            min_size = 10
+            max_size = 80
+            size = min_size + (max_size - min_size) * (
+                (node_degree - min_degree) / (max_degree - min_degree) if max_degree != min_degree else 0)
+
+            # 构造 title 信息
             title_html = f"Node {node}\n"
             for key, value in attrs.items():
                 if isinstance(value, list):
@@ -27,7 +42,11 @@ class InteractiveNetwork:
                 else:
                     title_html += f"{key}: {value}\n"
 
-            H.add_node(node, title=title_html, label=f"Node {node}")
+            # 添加节点，并设置大小
+            if not node.isdigit():
+                H.add_node(node, title=title_html, label=f"Node {node}", color="#db5c5c", size=size)
+            else:
+                H.add_node(node, title=title_html, label=f"Node {node}", size=size)
 
         for u, v, attrs in self.G.edges(data=True):
             title_html = f"Edge {u}-{v}"

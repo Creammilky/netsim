@@ -1,6 +1,9 @@
 import ast
 import networkx as nx
+from utils import logger
 
+# Initialize logger
+log = logger.Logger("topology")
 
 def bgp_to_xml(bgp_update_file_path: str, existing_topology=None):
     with open(bgp_update_file_path) as file:
@@ -20,7 +23,7 @@ def bgp_to_networkx(bgp_update_file_path: str, existing_topology=None):
             try:
                 line = ast.literal_eval(line.strip())  # 解析 BGP 数据
             except (SyntaxError, ValueError) as e:
-                print(f"解析错误: {e}, 跳过 -> {line}")
+                log.warning("解析错误: {e}, 跳过 -> {line}")
                 continue
 
             # 确保 "path" 不是 None
