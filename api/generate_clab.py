@@ -1,8 +1,6 @@
 import os
 import networkx as nx
-import uuid
-from jinja2 import Template, Environment, FileSystemLoader
-from sympy.codegen.ast import Raise
+from jinja2 import Environment, FileSystemLoader
 
 from utils import logger, ipv4_utils
 from dotenv import load_dotenv
@@ -22,7 +20,7 @@ if not ROUTER_IMAGE or not LABS_PATH:
 
 # Fetch Jinja2 templates
 env = Environment(loader=FileSystemLoader('templates/clab'))
-template = env.get_template('clab.yaml.jinja2')
+template = env.get_template('clab.yaml.j2')
 
 def create_lab_dir(nodes: list, CURRENT_LAB_PATH):
     """
@@ -68,7 +66,7 @@ def make_yaml_info_from_edges(G: nx.Graph):
     # Reconstruct edges
     edges = []
     eth_count = [(node_id, 0) for node_id, _ in G.degree()]
-    print(eth_count)
+    log.debug(eth_count)
     for u, v in G.edges(data=False):
         if u == v:
             log.warning(f"Edge [{u},{v}] are Loopback in network topology")
@@ -87,7 +85,7 @@ def make_yaml_info_from_edges(G: nx.Graph):
                     v_eth = str(v) + ":eth" + str(count + 1)
                     eth_count[idx] = (node_id, count + 1)  # Update the tuple in the list
                 else:
-                    print(node_id, u, v, count)
+                    log.debug(node_id, u, v, count)
                     continue
             edges.append((u_eth, v_eth))
     return edges

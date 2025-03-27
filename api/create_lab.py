@@ -4,6 +4,7 @@ from api import generate_clab, topology
 from utils import graph_utils
 
 def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH):
+
     generate_clab.gen_yaml_from_nx(G, CURRENT_LAB_PATH=CURRENT_LAB_PATH)
 
 

@@ -1,0 +1,7 @@
+{% for interface in interfaces %}
+interface {{ interface.name }}
+{% if interface.ip %}
+ ip address {{ interface.ip }}
+{% endif %}
+exit
+!

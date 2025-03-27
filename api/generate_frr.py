@@ -1,6 +1,4 @@
 import os
-import networkx as nx
-import uuid
 import json
 from jinja2 import Template, Environment, FileSystemLoader
 from utils import logger, ipv4_utils
@@ -22,7 +20,7 @@ if not ROUTER_IMAGE or not LABS_PATH:
 
 # # Fetch Jinja2 templates
 # env = Environment(loader=FileSystemLoader('templates/frr'))
-# template = env.get_template('frr.conf.jinja2')
+# template = env.get_template('frr.conf.j2')
 
 
 # Define the Jinja2 template for FRR configuration
