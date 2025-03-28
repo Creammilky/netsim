@@ -45,7 +45,7 @@ class Logger:
 
         # 创建控制台处理器
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(getattr(logging, TERMINAL_LEVEL, logging.INFO))
+        console_handler.setLevel(getattr(logging, TERMINAL_LEVEL, logging.DEBUG))
         console_formatter = ColoredFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         console_handler.setFormatter(console_formatter)
 

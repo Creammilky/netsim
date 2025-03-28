@@ -38,7 +38,7 @@ def eth_naming(G: nx.Graph, CURRENT_LAB_PATH):
                     v_eth = str(v) + ":eth" + str(count + 1)
                     eth_count[idx] = (node_id, count + 1)  # Update the tuple in the list
                 else:
-                    log.debug(f"{node_id}, {u}, {v}, {count}")
+                    # log.debug(f"{node_id}, {u}, {v}, {count}")
                     continue
             edges.append((u_eth, v_eth))
 

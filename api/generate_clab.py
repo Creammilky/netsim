@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize logger
-log = logger.Logger("clab.yml")
+log = logger.Logger("GenClab")
 
 # Fetch environment variables
 ROUTER_IMAGE = os.getenv("ROUTER_IMAGE")
@@ -85,7 +85,7 @@ def make_yaml_info_from_edges(G: nx.Graph):
                     v_eth = str(v) + ":eth" + str(count + 1)
                     eth_count[idx] = (node_id, count + 1)  # Update the tuple in the list
                 else:
-                    log.debug(node_id, u, v, count)
+                    # log.debug(f"{node_id}, {u}, {v}, {count}")
                     continue
             edges.append((u_eth, v_eth))
     return edges

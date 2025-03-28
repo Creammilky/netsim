@@ -2,7 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pyvis.network import Network
 import networkx as nx
+from utils import logger
 import json
+
+# Initialize logger
+log = logger.Logger("GraphUtils")
 
 class InteractiveNetwork:
     def __init__(self, G=None):
@@ -36,9 +40,11 @@ class InteractiveNetwork:
             title_html = f"Node {node}\n"
             for key, value in attrs.items():
                 if isinstance(value, list):
+                    # log.debug(f"list: {key}: {value}")
                     title_html += f"\n{key}:\n"
                     for prop in value:
-                        title_html += f"{prop.name}: {prop.value}\n"
+                        # Todo: to satisfy different type of attrs of nodes
+                        title_html += f"{key}: {prop}\n"
                 else:
                     title_html += f"{key}: {value}\n"
 
