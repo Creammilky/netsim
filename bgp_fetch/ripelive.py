@@ -19,16 +19,16 @@ log = logger.Logger("ripelive")
 
 def ripe_filter(datum, ip_type: int = 10, hosts: list = None):
     if hosts is not None:
-        result = ripe_host_filter(datum, hosts)
+        result = ripe_host_subfilter(datum, hosts)
         if result is None:
             return None
     if ip_type is not None:
-        result = ripe_ip_filter(datum, ip_type)
+        result = ripe_ip_subfilter(datum, ip_type)
         if result is None:
             return None
     return datum
 
-def ripe_ip_filter(datum, ip_type):
+def ripe_ip_subfilter(datum, ip_type):
     ip_addr = datum.get("peer")
     if ip_type==4:
         if is_ipv4(ip_addr) is True:
@@ -46,7 +46,7 @@ def ripe_ip_filter(datum, ip_type):
         log.error(f"Unsupported IP type: {ip_type}")
         raise Exception(f"Unsupported IP type: {ip_type}")
 
-def ripe_host_filter(datum, hosts):
+def ripe_host_subfilter(datum, hosts):
     ripe_hosts = ["ALL", "all" ,"rrc00.ripe.net", "rrc01.ripe.net"
         , "rrc03.ripe.net", "rrc04.ripe.net", "rrc05.ripe.net", "rrc06.ripe.net", "rrc07.ripe.net"
         , "rrc10.ripe.net", "rrc11.ripe.net", "rrc12.ripe.net", "rrc13.ripe.net", "rrc14.ripe.net", "rrc15.ripe.net"
@@ -69,7 +69,7 @@ def ripe_host_filter(datum, hosts):
     else:
         return None
 
-def ripe_msg_type_filter(datum, msg_type):
+def ripe_msg_type_subfilter(datum, msg_type):
     msg_types = ["UPDATE", "OPEN", "NOTIFICATION","KEEPALIVE"]
 
     message_type_filter = []
