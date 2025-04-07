@@ -9,12 +9,14 @@ def is_ipv4(ip):
     else:
         return False
 
+
 def is_ipv6(ip):
     ip_type = check_ip_version(ip)
     if ip_type==6:
         return True
     else:
         return False
+
 
 def check_ip_version(ip):
     try:
@@ -25,6 +27,29 @@ def check_ip_version(ip):
             return 6
     except ValueError:
         return 0
+
+
+def assign_ip_from_as(asn, iface_id):
+    high = asn // 256
+    low = asn % 256
+    return f"10.{high}.{low}.{iface_id}/32"
+
+
+def safe_next_ip(ip_str):
+    ip = ipaddress.ip_address(ip_str)
+    try:
+        return str(ip + 1)
+    except ValueError:
+        return None  # 已经是最大地址了
+
+
+def safe_prev_ip(ip_str):
+    ip = ipaddress.ip_address(ip_str)
+    try:
+        return str(ip - 1)
+    except ValueError:
+        return None  # 已经是最小地址了
+
 
 def is_valid_cidr(prefix):
     """
@@ -39,6 +64,7 @@ def is_valid_cidr(prefix):
         return True
     except ValueError:
         return False
+
 
 def prefix_to_cidr(prefix):
     """
@@ -66,6 +92,7 @@ def prefix_to_cidr(prefix):
             return f"{prefix}/32"
         else:
             raise ValueError("Invalid prefix format.")
+
 
 def load_used_ips(prefix=None, IP_STORAGE_FILE="./used_ips"):
     """Load previously generated IPs from a file and optionally count the ones under a given prefix"""

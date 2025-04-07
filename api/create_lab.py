@@ -15,8 +15,8 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH):
     assign_ip_for_routers(G, CURRENT_LAB_PATH)
     # generate config file according to IP and AS
 
-    # assign mgmt-ipv4 for container lab and gen yaml
 
+    # assign mgmt-ipv4 for container lab and gen yaml
     # Todo:think about ip prefix setting and container lab
     mgmt_ips = ipv4_utils.generate_random_ipv4(prefix="", count=node_num,
                                               IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'cache', 'used_ips'))
