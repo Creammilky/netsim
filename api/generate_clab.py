@@ -1,6 +1,7 @@
 import os
 import networkx as nx
 from jinja2 import Environment, FileSystemLoader
+from sympy.codegen.ast import Raise
 
 from utils import logger, ipv4_utils
 from dotenv import load_dotenv
@@ -22,44 +23,43 @@ if not ROUTER_IMAGE or not LABS_PATH:
 env = Environment(loader=FileSystemLoader('templates/clab'))
 template = env.get_template('clab.yaml.j2')
 
-def create_lab_dir(nodes: list, CURRENT_LAB_PATH):
-    """
-    Create directories for the lab setup.
-    """
-    os.makedirs(CURRENT_LAB_PATH, exist_ok=True)
-    os.makedirs(os.path.join(CURRENT_LAB_PATH, 'config'), exist_ok=True)
-    for node in nodes:
-        os.makedirs(os.path.join(CURRENT_LAB_PATH, 'config', str(node)), exist_ok=True)
-
-
-def make_yaml_info_from_nodes(G: nx.Graph, CURRENT_LAB_PATH):
+def make_yaml_info_from_nodes(G: nx.Graph, mgmt_ips: (list|str) = "auto"):
     """
     Create YAML info from the NetworkX graph G.
     """
-    # Todo: implement net interface in links/endpoints
-    node_deg = G.degree()
-    node_num = G.number_of_nodes()
+    # Todo: implement net interface in links/endpoints ??
+    number_of_nodes = G.number_of_nodes()
     nodes = {}
     selected_keys = []
-
-    # Generate IP pool based on the number of nodes
-    # Remember
-    #Todo:think about ip prefix setting and container lab
-    ip_pool = ipv4_utils.generate_random_ipv4(prefix="", count=node_num,
-                                              IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'used_ips'))
     index = 0
 
-    # Reconstruct nodes
-    for node, attr in G.nodes(data=True):
-        attr_new = {
-            "image": ROUTER_IMAGE,
-            "binds": f"\n        - config/{str(node)}:/etc/frr", # Caution for 8 spaces here...
-            "mgmt-ipv4": ip_pool[index],
-        }
-        attr_new.update({key: attr[key] for key in selected_keys})
-        index += 1
-        nodes[node] = attr_new
+    if isinstance(mgmt_ips, str) and mgmt_ips == "auto":
+        for node, attr in G.nodes(data=True):
+            attr_new = {
+                "image": ROUTER_IMAGE,
+                "binds": f"\n        - config/{str(node)}:/etc/frr",  # Caution for 8 spaces here...
+            }
+            attr_new.update({key: attr[key] for key in selected_keys})
+            index += 1
+            nodes[node] = attr_new
 
+    elif isinstance(mgmt_ips, list) and mgmt_ips is not None:
+        if len(mgmt_ips) != number_of_nodes:
+            log.error("Cannot make clab.yaml due to not enough mgmt-ips provided.")
+            raise Exception("Cannot make clab.yaml due to not enough mgmt-ips.")
+        for node, attr in G.nodes(data=True):
+            attr_new = {
+                "image": ROUTER_IMAGE,
+                "binds": f"\n        - config/{str(node)}:/etc/frr", # Caution for 8 spaces here...
+                "mgmt-ipv4": mgmt_ips[index],
+            }
+            attr_new.update({key: attr[key] for key in selected_keys})
+            index += 1
+            nodes[node] = attr_new
+
+    else:
+        log.error("Error type of given mgmt-ipv4")
+        raise Exception("Error type of given mgmt-ipv4")
     return nodes
 
 def make_yaml_info_from_edges(G: nx.Graph):
@@ -90,20 +90,18 @@ def make_yaml_info_from_edges(G: nx.Graph):
             edges.append((u_eth, v_eth))
     return edges
 
-def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH):
+def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH, mgmt_ips:(list|str) ="auto"):
     """
     Generate YAML from NetworkX graph and save to file.
     """
-    # Create the lab directory structure
-    create_lab_dir(list(G.nodes()), CURRENT_LAB_PATH)
-
     # Prepare node information for the YAML
-    nodes = make_yaml_info_from_nodes(G, CURRENT_LAB_PATH)
+    nodes = make_yaml_info_from_nodes(G,mgmt_ips)
     edges = make_yaml_info_from_edges(G)
 
     # Prepare topology information for Jinja2 template rendering
     topology = {
-        "name": "fdc",
+        "name": f"{CURRENT_LAB_PATH}",
+        "mgmt": "auto" if mgmt_ips == "auto" else None,
         "topology": {
             "defaults": {
                 "kind": "linux",

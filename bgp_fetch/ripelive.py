@@ -102,6 +102,7 @@ ws.send(json.dumps({
 }))
 for data in ws:
     parsed = json.loads(data)
+    print(parsed)
     data = {
         "peer": parsed["data"].get("peer"),
         "peer_asn": parsed["data"].get("peer_asn"),
@@ -112,7 +113,7 @@ for data in ws:
         "announcements": parsed["data"].get("announcements", []),  # 如果没有，默认空列表
         "withdrawals": parsed["data"].get("withdrawals", []),  # 如果没有，默认空列表
     }
-    result = ripe_filter(data, 4, ["rrc00.ripe.net", "rrc03.ripe.net", "rrc04.ripe.net"])
-    if result is not None:
-        print(result)
+    # result = ripe_filter(data, 4, ["rrc00.ripe.net", "rrc03.ripe.net", "rrc04.ripe.net"])
+    # if result is not None:
+    #     print(result)
 

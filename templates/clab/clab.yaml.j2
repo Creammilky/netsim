@@ -1,15 +1,26 @@
 # This is a base template file for clab.yaml for each container lab
 name: {{ name }}
+{%- if mgmt == "auto" %}
+
+mgmt:
+  ipv4-subnet: auto
+  ipv6-subnet: auto
+{%- endif %}
 
 topology:
   defaults:
     kind: {{ topology.defaults.kind }}
     image: {{ topology.defaults.image }}
 
-  nodes:{%- for node, attributes in topology.nodes.items() %}
-    {{ node }}:{%- for key, value in attributes.items() %}
-      {{ key }}: {{ value }}{%- endfor %}
+  nodes:
+  {%- for node, attrs in topology.nodes.items() %}
+    {{ node }}:
+    {%- for key, value in attrs.items() %}
+      {{ "  " + key }}: {{ value }}
     {%- endfor %}
+  {%- endfor %}
 
-  links:{%- for link in topology.links %}
-    - endpoints: {{ link.endpoints | tojson }}{%- endfor %}
+  links:
+  {%- for link in topology.links %}
+    - endpoints: {{ link.endpoints | tojson }}
+  {%- endfor %}

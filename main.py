@@ -29,19 +29,9 @@ if __name__ == "__main__":
     # Generate CURRENT_LAB_PATH dynamically based on the lab
     CURRENT_LAB_PATH = os.path.join(LABS_PATH, str(uuid.uuid4()))
 
-    parser = xml_parser.GraphParser("test/route-xmls/route_complex_1.xml")
+    parser = xml_parser.GraphParser("test/route-xmls/route_2.xml")
     parser.parse()
-    #
-    # # Print all nodes and their weights
-    # print("Nodes:")
-    # for node_id, node in parser.nodes.items():
-    #     print(f"ID: {node_id}, Label: {node.group}, Weight: {node.weight}")
-    #
-    # # Print all edges
-    # print("\nEdges:")
-    # for edge in parser.edges:
-    #     print(f"{edge.source} -> {edge.target} (Weight: {edge.weight}, Type: {edge.type})")
-    #
+
     G_xml = parser.get_networkx()
     # # graph_utils.draw_networkx_graph(G)
     # # graph_utils.draw_networkx_graph_complex(G)
@@ -58,7 +48,7 @@ if __name__ == "__main__":
     # print("--------------------------------\n")
     # print(G.edges())
 
-    G_updates = topology.bgp_to_networkx('test/ripe_output_bak.txt')
+    G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
 
     eth_naming = eth_naming(G_updates, CURRENT_LAB_PATH)
     print(eth_naming)

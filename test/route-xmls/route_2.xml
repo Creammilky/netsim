@@ -64,15 +64,6 @@
     </Nodes>
 
     <Edges>
-        <Edge source="1" target="2">
-            <Weight>0.9</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">10G</Property>
-                <Property name="latency">low</Property>
-                <Property name="protocol">BGP</Property>
-            </Properties>
-        </Edge>
         <Edge source="2" target="4">
             <Weight>0.95</Weight>
             <Type>directed</Type>
@@ -89,15 +80,6 @@
                 <Property name="bandwidth">10G</Property>
                 <Property name="latency">medium</Property>
                 <Property name="protocol">OSPF</Property>
-            </Properties>
-        </Edge>
-        <Edge source="2" target="3">
-            <Weight>0.75</Weight>
-            <Type>undirected</Type>
-            <Properties>
-                <Property name="bandwidth">1G</Property>
-                <Property name="latency">high</Property>
-                <Property name="protocol">BGP</Property>
             </Properties>
         </Edge>
         <Edge source="5" target="6">
@@ -124,15 +106,6 @@
             <Properties>
                 <Property name="bandwidth">10G</Property>
                 <Property name="latency">low</Property>
-                <Property name="protocol">OSPF</Property>
-            </Properties>
-        </Edge>
-        <Edge source="4" target="6">
-            <Weight>0.65</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">1G</Property>
-                <Property name="latency">high</Property>
                 <Property name="protocol">OSPF</Property>
             </Properties>
         </Edge>

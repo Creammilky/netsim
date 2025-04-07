@@ -53,17 +53,19 @@ def prefix_to_cidr(prefix):
     else:
         parts = prefix.split('.')
         parts = [item for item in parts if item != '']
-        # If the prefix has 3 parts, assume a /24 subnet (256 addresses)
-        if len(parts) == 3:
-            return f"{prefix}0/24"
         # If the prefix has 2 parts, assume a /16 subnet (65536 addresses)
+        if len(parts) == 1:
+            return f"{prefix}0.0.0/8"
         elif len(parts) == 2:
             return f"{prefix}0.0/16"
+        # If the prefix has 3 parts, assume a /24 subnet (256 addresses)
+        elif len(parts) == 3:
+            return f"{prefix}0/24"
         # Handle cases where the prefix is already full (e.g., '1.2.3.4')
         elif len(parts) == 4:
             return f"{prefix}/32"
         else:
-            raise ValueError("Invalid prefix format. The prefix must have 2, 3, or 4 parts.")
+            raise ValueError("Invalid prefix format.")
 
 def load_used_ips(prefix=None, IP_STORAGE_FILE="./used_ips"):
     """Load previously generated IPs from a file and optionally count the ones under a given prefix"""
@@ -107,7 +109,7 @@ def generate_random_ipv4(prefix="172.20.20.", count=1, IP_STORAGE_FILE="./used_i
         prefix_parts = prefix.split(".")
         prefix_parts = [item for item in prefix_parts if item != '']
         if len(prefix_parts) >= 4 or not prefix.endswith("."):
-            raise ValueError("Invalid prefix format. Ensure it's in the form 'x.x.x.' or 'x.x.'.")
+            raise ValueError("Invalid prefix format. Ensure it's in the form 'x.x.x.' or 'x.x.'")
 
         # Count the missing octets
         missing_octets = 4 - prefix.count(".")
@@ -140,4 +142,4 @@ def generate_random_ipv4(prefix="172.20.20.", count=1, IP_STORAGE_FILE="./used_i
 
 # Example usage
 if __name__ == "__main__":
-    print(generate_random_ipv4("10.0.0.", 256))  # Generate 5 unique IPs
+    print(generate_random_ipv4("10.", 256000))  # Generate 5 unique IPs
