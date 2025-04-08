@@ -90,13 +90,13 @@ def make_yaml_info_from_edges(G: nx.Graph):
             edges.append((u_eth, v_eth))
     return edges
 
-def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH, mgmt_ips:(list|str) ="auto"):
+def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH, eth_table ,mgmt_ips:(list|str) ="auto"):
     """
     Generate YAML from NetworkX graph and save to file.
     """
     # Prepare node information for the YAML
     nodes = make_yaml_info_from_nodes(G,mgmt_ips)
-    edges = make_yaml_info_from_edges(G)
+    edges = eth_table
 
     # Prepare topology information for Jinja2 template rendering
     topology = {

@@ -60,7 +60,7 @@ def is_valid_cidr(prefix):
     """
     try:
         # Try to create an ip_network object, which validates the CIDR format
-        ipaddress.ip_network(prefix, strict=False)
+        ipaddress.ip_network(prefix, strict=True)
         return True
     except ValueError:
         return False
@@ -167,6 +167,23 @@ def generate_random_ipv4(prefix="172.20.20.", count=1, IP_STORAGE_FILE="./used_i
     return list(generated_ips) if count > 1 else next(iter(generated_ips))
 
 
+def generate_p2p_ip_pairs(IP_STORAGE_FILE="./used_ips"):
+    used_ips = load_used_ips(IP_STORAGE_FILE)
+
+    while True:
+        net_addr = generate_random_ipv4("10.", count=1, IP_STORAGE_FILE=IP_STORAGE_FILE)
+        if not is_valid_cidr(net_addr + "/31"):
+            continue
+
+        first_ip = net_addr
+        second_ip = safe_next_ip(net_addr)
+
+        if first_ip in used_ips or second_ip in used_ips:
+            continue
+
+        save_used_ips( [second_ip], IP_STORAGE_FILE)
+        return first_ip, second_ip
+
 # Example usage
 if __name__ == "__main__":
-    print(generate_random_ipv4("10.", 256000))  # Generate 5 unique IPs
+    print(is_valid_cidr("192.168.1.254/31"))  # Generate 5 unique IPs

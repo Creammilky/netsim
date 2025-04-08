@@ -5,7 +5,8 @@ from utils import logger
 # Initialize logger
 log = logger.Logger("Topology")
 
-def bgp_to_xml(bgp_update_file_path: str, existing_topology=None):
+def bgp_to_xml(bgp_update_file_path: str):
+    # Todo: Unfinished.
     with open(bgp_update_file_path) as file:
         for line in file:
             print(line.strip())  # strip() 去除换行符

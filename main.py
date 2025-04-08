@@ -48,7 +48,7 @@ if __name__ == "__main__":
     # print("--------------------------------\n")
     # print(G.edges())
 
-    G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
+    G_updates = topology.bgp_to_networkx('test/ripe_output_bak.txt')
 
     eth_naming = eth_naming(G_updates, CURRENT_LAB_PATH)
     print(eth_naming)
