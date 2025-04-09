@@ -7,9 +7,12 @@ If you use the 'websockets' package instead (Python 3 only) you will need to cha
 """
 import json
 import websocket
+
+from dotenv import load_dotenv
+
 from utils.ipv4_utils import is_ipv4, is_ipv6
 from utils import logger
-from dotenv import load_dotenv
+
 
 # Load environment variables from .env file
 load_dotenv()

@@ -1,15 +1,18 @@
+"""
+    Import examples, look below "#"
+"""
+# Builtins
 import json
-
-import api.create_lab
-from api import topology, create_lab
-from api.ethernet_manager import eth_assign
 import os
-
 import uuid
 
-from api.ethernet_manager.eth_assign import eth_naming
-from utils import logger, ipv4_utils, xml_parser
+# Packages(site)
 from dotenv import load_dotenv
+
+# Internal Files
+from api import topology, create_lab
+from utils import logger, xml_parser
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -50,9 +53,4 @@ if __name__ == "__main__":
 
     G_updates = topology.bgp_to_networkx('test/ripe_output_bak.txt')
 
-    eth_naming = eth_naming(G_updates, CURRENT_LAB_PATH)
-    print(eth_naming)
-
-    eth_json = json.dumps(eth_naming, indent=4)
-    print(eth_json)
     create_lab.create_lab_instance(G_updates, CURRENT_LAB_PATH)
