@@ -135,7 +135,8 @@ def define_network_interfaces(G: nx.Graph, CURRENT_LAB_PATH):
                 # 如果接口不存在，添加新接口
                 if not interface_exists:
                     ip_json["interfaces"].append({
-                        eth: ip,
+                        "name" : eth,
+                        "ip": ip,
                         "endpoint": endpoint
                     })
 

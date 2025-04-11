@@ -2,7 +2,7 @@ import json
 import os
 import networkx as nx
 
-from api import generate_clab, topology
+from api import generate_clab, generate_frr_config
 from utils import graph_utils, ipv4_utils
 from utils import logger
 from api.ethernet_manager import eth_assign
@@ -10,7 +10,7 @@ from api.ethernet_manager import eth_assign
 # Initialize logger
 log = logger.Logger("CreateLab")
 
-def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH):
+def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
 
     create_lab_dir(list(G.nodes()), CURRENT_LAB_PATH)
     node_num = G.number_of_nodes()
@@ -19,7 +19,10 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH):
 
     # generate config file according to IP and AS
     eth_table = eth_assign.define_network_interfaces(G, CURRENT_LAB_PATH)
+
     # Todo: CRITICAL generate config files according to cache/*.ip
+    for host in G.nodes():
+        generate_frr_config.gen_frr_config_for_routers(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=frr_version, hostname=host)
 
     # assign mgmt-ipv4 for container lab and gen yaml
     # Todo:think about ip prefix setting and container lab

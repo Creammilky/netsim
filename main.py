@@ -23,6 +23,7 @@ log = logger.Logger("main")
 # Fetch environment variables
 ROUTER_IMAGE = os.getenv("ROUTER_IMAGE")
 LABS_PATH = os.getenv("LABS_PATH")
+FRR_VERSION = os.getenv("FRR_VERSION")
 if not ROUTER_IMAGE or not LABS_PATH:
     log.error("Required environment variables ROUTER_IMAGE or LABS_PATH are missing!")
     raise EnvironmentError("Required environment variables are missing!")
@@ -51,6 +52,6 @@ if __name__ == "__main__":
     # print("--------------------------------\n")
     # print(G.edges())
 
-    G_updates = topology.bgp_to_networkx('test/ripe_output_bak.txt')
+    G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
 
-    create_lab.create_lab_instance(G_updates, CURRENT_LAB_PATH)
+    create_lab.create_lab_instance(G=G_updates, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
