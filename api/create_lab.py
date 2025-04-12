@@ -10,6 +10,8 @@ from api.ethernet_manager import eth_assign
 # Initialize logger
 log = logger.Logger("CreateLab")
 
+mgmt_prefix = "172.0.0.0/8"
+
 def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
 
     create_lab_dir(list(G.nodes()), CURRENT_LAB_PATH)
@@ -28,10 +30,10 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
         frr_configurator.gen_vtysh_config(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
     # assign mgmt-ipv4 for container lab and gen yaml
     # Todo:think about ip prefix setting and container lab
-    mgmt_ips = ipv4_utils.generate_random_ipv4(prefix="", count=node_num,
+    mgmt_ips = ipv4_utils.generate_random_ipv4_with_save(prefix=mgmt_prefix, count=node_num,
                                               IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'cache', 'used_ips'))
 
-    generate_clab.gen_yaml_from_nx(G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, eth_table=eth_table, mgmt_ips=mgmt_ips)
+    generate_clab.gen_yaml_from_nx(G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, eth_table=eth_table, mgmt_ips=mgmt_ips, mgmt_prefix=mgmt_prefix)
 
 
     interactive_net = graph_utils.InteractiveNetwork(G)

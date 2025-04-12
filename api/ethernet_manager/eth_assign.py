@@ -48,7 +48,7 @@ def assign_eth(G: nx.Graph):
     return edges
 
 
-def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.168.", as_default_prefix="10."):
+def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.168.0.0/16", as_default_prefix="10.0.0.0/8"):
     """
     Assign loopback IP addresses to routers, and write them to individual files.
     Each file includes loopback IP, type, ASN (if available), and placeholder for port IPs.
@@ -60,7 +60,7 @@ def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.
 
         if node_type.get(node) == "as":
             if nx.get_node_attributes(G, node).get('ip_addr') is None:
-                router_ip = ipv4_utils.generate_random_ipv4(
+                router_ip = ipv4_utils.generate_random_ipv4_with_save(
                     prefix=as_default_prefix,
                     count=1,
                     IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'cache', 'used_ips')
@@ -71,7 +71,7 @@ def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.
 
         elif node_type.get(node) == "VP":
             if nx.get_node_attributes(G, node).get('ip_addr') is None:
-                router_ip = ipv4_utils.generate_random_ipv4(
+                router_ip = ipv4_utils.generate_random_ipv4_with_save(
                     prefix=vp_dafault_prefix,
                     count=1,
                     IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'cache', 'used_ips')

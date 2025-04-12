@@ -33,6 +33,7 @@ def gen_frr_config(G:nx.Graph ,CURRENT_LAB_PATH, frr_version, hostname):
         frr_config = header_info + "\n" + interfaces_info + "\n"
         f.write(frr_config)
 
+
 def gen_frr_daemon(CURRENT_LAB_PATH, hostname ,**kwargs):
     kwargs = kwargs.copy()
     daemon_keyword_list = ["bgpd", "ospfd", "isisd", ]
@@ -42,6 +43,7 @@ def gen_frr_daemon(CURRENT_LAB_PATH, hostname ,**kwargs):
     with open(os.path.join(CURRENT_LAB_PATH, "config", f"{hostname}","daemons"), mode="w+") as f:
         output = template.render()
         f.write(output)
+
 
 def gen_vtysh_config(CURRENT_LAB_PATH, hostname ,**kwargs):
     kwargs = kwargs.copy()

@@ -116,62 +116,141 @@ def save_used_ips(ips, IP_STORAGE_FILE="./used_ips"):
         f.writelines(ip + "\n" for ip in ips)
 
 
-def generate_random_ipv4(prefix="172.20.20.", count=1, IP_STORAGE_FILE="./used_ips"):
-    """
-    Generate unique random IPv4 addresses with an optional prefix.
+# def generate_random_ipv4(prefix="172.20.20.", count=1, IP_STORAGE_FILE="./used_ips"):
+#     """
+#     Generate unique random IPv4 addresses with an optional prefix.
+#
+#     :param prefix: The prefix of the IPv4 address (e.g., "192.168.1.", "10.0.").
+#     However, default value is '172.20.20.0/24' because it is container-lab's default prefix.
+#     :param count: Number of unique IPs to generate (default: 1).
+#     :return: A single IP string if count=1, or a list of IP strings if count > 1.
+#     """
+#     if count < 1:
+#         raise ValueError("Count must be at least 1.")
+#
+#     used_ips = load_used_ips(prefix, IP_STORAGE_FILE=IP_STORAGE_FILE)
+#     generated_ips = set()  # Temporary set for this function call
+#
+#     if prefix:
+#         # Ensure prefix does not have the last octet
+#         prefix_parts = prefix.split(".")
+#         prefix_parts = [item for item in prefix_parts if item != '']
+#         if len(prefix_parts) >= 4 or not prefix.endswith("."):
+#             raise ValueError("Invalid prefix format. Ensure it's in the form 'x.x.x.' or 'x.x.'")
+#
+#         # Count the missing octets
+#         missing_octets = 4 - prefix.count(".")
+#         max_possible_ips = 256 ** missing_octets
+#
+#         if len(used_ips) + count > max_possible_ips:
+#             raise RuntimeError(f"Not enough available IPs in the subnet {prefix}!")
+#
+#         while len(generated_ips) < count:
+#             random_parts = [str(random.randint(0, 255)) for _ in range(missing_octets)]
+#             ip = prefix + ".".join(random_parts) if missing_octets > 1 else prefix + random_parts[0]
+#
+#             if ip not in used_ips and ip not in generated_ips:
+#                 generated_ips.add(ip)
+#     else:
+#         # Generate fully random IPv4 addresses
+#         max_possible_ips = 256 ** 4
+#         if len(used_ips) + count > max_possible_ips:
+#             raise RuntimeError("Not enough available IPv4 addresses!")
+#
+#         while len(generated_ips) < count:
+#             ip = ".".join(str(random.randint(0, 255)) for _ in range(4))
+#             if ip not in used_ips and ip not in generated_ips:
+#                 generated_ips.add(ip)
+#
+#     # Save generated IPs and return the result
+#     save_used_ips(generated_ips, IP_STORAGE_FILE=IP_STORAGE_FILE)
+#     return list(generated_ips) if count > 1 else next(iter(generated_ips))
 
-    :param prefix: The prefix of the IPv4 address (e.g., "192.168.1.", "10.0.").
-    However, default value is '172.20.20.0/24' because it is container-lab's default prefix.
+
+def generate_random_ipv4(prefix="172.20.20.0/24", count=1, IP_STORAGE_FILE="./used_ips"):
+    """
+    Generate unique random IPv4 addresses within a CIDR subnet with improved performance.
+
+    :param prefix: CIDR notation of the subnet (e.g., "192.168.1.0/24", "10.0.0.0/8").
     :param count: Number of unique IPs to generate (default: 1).
+    :param IP_STORAGE_FILE: File to store used IP addresses.
     :return: A single IP string if count=1, or a list of IP strings if count > 1.
     """
     if count < 1:
         raise ValueError("Count must be at least 1.")
 
-    used_ips = load_used_ips(prefix, IP_STORAGE_FILE=IP_STORAGE_FILE)
-    generated_ips = set()  # Temporary set for this function call
+    # Parse the CIDR prefix
+    try:
+        network = ipaddress.IPv4Network(prefix, strict=True)
+    except ValueError:
+        raise ValueError(f"Invalid CIDR prefix format: {prefix}. Use format like '192.168.1.0/24'")
 
-    if prefix:
-        # Ensure prefix does not have the last octet
-        prefix_parts = prefix.split(".")
-        prefix_parts = [item for item in prefix_parts if item != '']
-        if len(prefix_parts) >= 4 or not prefix.endswith("."):
-            raise ValueError("Invalid prefix format. Ensure it's in the form 'x.x.x.' or 'x.x.'")
-
-        # Count the missing octets
-        missing_octets = 4 - prefix.count(".")
-        max_possible_ips = 256 ** missing_octets
-
-        if len(used_ips) + count > max_possible_ips:
-            raise RuntimeError(f"Not enough available IPs in the subnet {prefix}!")
-
-        while len(generated_ips) < count:
-            random_parts = [str(random.randint(0, 255)) for _ in range(missing_octets)]
-            ip = prefix + ".".join(random_parts) if missing_octets > 1 else prefix + random_parts[0]
-
-            if ip not in used_ips and ip not in generated_ips:
-                generated_ips.add(ip)
+    # Calculate network parameters
+    start_int = int(network.network_address)
+    if network.prefixlen < 31:
+        # Exclude network and broadcast addresses for normal networks
+        start_int += 1
+        end_int = int(network.broadcast_address) - 1
     else:
-        # Generate fully random IPv4 addresses
-        max_possible_ips = 256 ** 4
-        if len(used_ips) + count > max_possible_ips:
-            raise RuntimeError("Not enough available IPv4 addresses!")
+        # For /31 and /32, all addresses are usable
+        end_int = int(network.broadcast_address)
 
-        while len(generated_ips) < count:
-            ip = ".".join(str(random.randint(0, 255)) for _ in range(4))
+    max_possible_ips = end_int - start_int + 1
+
+    # Load previously used IPs (more efficiently)
+    used_ips = set()
+    if os.path.exists(IP_STORAGE_FILE):
+        network_str = str(network)
+        with open(IP_STORAGE_FILE, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith(network_str):
+                    ip_parts = line.split()
+                    if len(ip_parts) > 1:
+                        used_ips.add(ip_parts[1])  # Store just the IP string
+
+    # Check if there are enough available IPs
+    if len(used_ips) + count > max_possible_ips:
+        raise RuntimeError(f"Not enough available IPs in the subnet {prefix}! "
+                           f"Available: {max_possible_ips - len(used_ips)}, Requested: {count}")
+
+    # Generate unique IPs more efficiently
+    generated_ips = set()
+    attempts = 0
+    max_attempts = count * 10  # Safety limit to prevent infinite loops
+
+    while len(generated_ips) < count and attempts < max_attempts:
+        attempts += 1
+        # Generate a random integer between start and end
+        random_int = random.randint(start_int, end_int)
+        ip = str(ipaddress.IPv4Address(random_int))
+
+        if ip not in used_ips and ip not in generated_ips:
+            generated_ips.add(ip)
+
+    if len(generated_ips) < count:
+        # If we couldn't generate enough IPs randomly, try sequential allocation as fallback
+        # Todo: im not sure if this will meet error when generating large amount of /30 ips.
+        current_int = start_int
+        while len(generated_ips) < count and current_int <= end_int:
+            ip = str(ipaddress.IPv4Address(current_int))
             if ip not in used_ips and ip not in generated_ips:
                 generated_ips.add(ip)
+            current_int += 1
 
-    # Save generated IPs and return the result
-    save_used_ips(generated_ips, IP_STORAGE_FILE=IP_STORAGE_FILE)
     return list(generated_ips) if count > 1 else next(iter(generated_ips))
+
+def generate_random_ipv4_with_save(prefix="172.20.20.0/24", count=1, IP_STORAGE_FILE="./used_ips"):
+    generated_ips = generate_random_ipv4(prefix=prefix, count=count, IP_STORAGE_FILE=IP_STORAGE_FILE)
+    save_used_ips(generated_ips, IP_STORAGE_FILE)
+    return generated_ips
 
 
 def generate_p2p_ip_pairs(IP_STORAGE_FILE="./used_ips"):
     used_ips = load_used_ips(IP_STORAGE_FILE)
 
     while True:
-        net_addr = generate_random_ipv4("10.", count=1, IP_STORAGE_FILE=IP_STORAGE_FILE)
+        net_addr = generate_random_ipv4("10.0.0.0/8", count=1, IP_STORAGE_FILE=IP_STORAGE_FILE)
         if not is_valid_cidr(net_addr + "/31"):
             continue
 
@@ -181,7 +260,7 @@ def generate_p2p_ip_pairs(IP_STORAGE_FILE="./used_ips"):
         if first_ip in used_ips or second_ip in used_ips:
             continue
 
-        save_used_ips( [second_ip], IP_STORAGE_FILE)
+        save_used_ips( [first_ip, second_ip], IP_STORAGE_FILE)
         return first_ip, second_ip
 
 # Example usage
