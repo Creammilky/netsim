@@ -37,20 +37,6 @@ if __name__ == "__main__":
     parser.parse()
 
     G_xml = parser.get_networkx()
-    # # graph_utils.draw_networkx_graph(G)
-    # # graph_utils.draw_networkx_graph_complex(G)
-    # for g_node, g_attr in G.nodes.items():
-    #     print(f"{g_node}: {g_attr}")
-    # ASN = nx.get_node_attributes(G, "ASN")
-    # print(ASN)
-    #
-    # print("--------------------------------\n")
-    # print({node: G.nodes[node] for node in G.nodes})
-    # print("--------------------------------\n")
-    #
-    # print(nx.degree(G))
-    # print("--------------------------------\n")
-    # print(G.edges())
 
     G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
 
