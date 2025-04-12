@@ -1,7 +1,4 @@
-import os
-
 from jinja2 import Environment, FileSystemLoader
-from numpy.polynomial.hermite import hermder
 
 from utils import logger
 from dotenv import load_dotenv

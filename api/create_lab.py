@@ -1,8 +1,8 @@
-import json
 import os
+
 import networkx as nx
 
-from api import generate_clab, generate_frr_config
+from api import generate_clab, frr_configurator
 from utils import graph_utils, ipv4_utils
 from utils import logger
 from api.ethernet_manager import eth_assign
@@ -22,8 +22,9 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
 
     # Todo: CRITICAL generate config files according to cache/*.ip
     for host in G.nodes():
-        generate_frr_config.gen_frr_config_for_routers(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=frr_version, hostname=host)
-
+        frr_configurator.gen_frr_config(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=frr_version,
+                                           hostname=host)
+        frr_configurator.gen_frr_daemon(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
     # assign mgmt-ipv4 for container lab and gen yaml
     # Todo:think about ip prefix setting and container lab
     mgmt_ips = ipv4_utils.generate_random_ipv4(prefix="", count=node_num,
