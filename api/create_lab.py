@@ -25,6 +25,7 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
         frr_configurator.gen_frr_config(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=frr_version,
                                            hostname=host)
         frr_configurator.gen_frr_daemon(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
+        frr_configurator.gen_vtysh_config(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
     # assign mgmt-ipv4 for container lab and gen yaml
     # Todo:think about ip prefix setting and container lab
     mgmt_ips = ipv4_utils.generate_random_ipv4(prefix="", count=node_num,

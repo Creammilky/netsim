@@ -43,6 +43,17 @@ def gen_frr_daemon(CURRENT_LAB_PATH, hostname ,**kwargs):
         output = template.render()
         f.write(output)
 
+def gen_vtysh_config(CURRENT_LAB_PATH, hostname ,**kwargs):
+    kwargs = kwargs.copy()
+    daemon_keyword_list = ["bgpd", "ospfd", "isisd", ]
+    template = env.get_template('vtysh.j2')
+
+    # make sure kwargs can specify vtysh.j2, but in future
+
+    with open(os.path.join(CURRENT_LAB_PATH, "config", f"{hostname}","vtysh.conf"), mode="w+") as f:
+        output = template.render()
+        f.write(output)
+
 
 if __name__ == '__main__':
     print("Generating FRR config for routers")
