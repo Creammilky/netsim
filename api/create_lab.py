@@ -10,7 +10,7 @@ from api.ethernet_manager import eth_assign
 # Initialize logger
 log = logger.Logger("CreateLab")
 
-mgmt_prefix = "172.0.0.0/8"
+mgmt_prefix = "172.20.0.0/16"
 
 def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
 

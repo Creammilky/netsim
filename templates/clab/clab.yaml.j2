@@ -5,7 +5,9 @@ mgmt:
   ipv4-subnet: auto
   ipv6-subnet: auto
 {% else %}
-mgmt: {{ mgmt }}
+mgmt:
+  network: br-
+  ipv4-subnet: {{ mgmt }}
 {%- endif %}
 
 topology:

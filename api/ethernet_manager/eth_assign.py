@@ -58,7 +58,7 @@ def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.
     for node in G.nodes():
         router_ip = None
 
-        if node_type.get(node) == "as":
+        if node_type.get(node) == "as" or node_type.get(node) is None:
             if nx.get_node_attributes(G, node).get('ip_addr') is None:
                 router_ip = ipv4_utils.generate_random_ipv4_with_save(
                     prefix=as_default_prefix,
@@ -78,6 +78,7 @@ def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.
                 )
                 log.info("Assigning IP: {} for router {}".format(router_ip, node))
                 nx.set_node_attributes(G, {node: router_ip}, "ip_addr")
+
 
         if router_ip:
             ip_file_data = {

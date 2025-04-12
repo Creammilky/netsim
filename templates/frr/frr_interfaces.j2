@@ -1,6 +1,7 @@
 !
 interface lo
  ip address {{ loopback }}/32
+!
 {%- for interface in interfaces %}
 interface {{ interface.name }}
 {%- if interface.ip %}
@@ -8,5 +9,4 @@ interface {{ interface.name }}
 !
 {%- endif %}
 {%- endfor %}
-exit
 !

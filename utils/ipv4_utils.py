@@ -251,17 +251,43 @@ def generate_p2p_ip_pairs(IP_STORAGE_FILE="./used_ips"):
 
     while True:
         net_addr = generate_random_ipv4("10.0.0.0/8", count=1, IP_STORAGE_FILE=IP_STORAGE_FILE)
-        if not is_valid_cidr(net_addr + "/31"):
+        if not is_valid_cidr(net_addr + "/30"):
             continue
 
-        first_ip = net_addr
-        second_ip = safe_next_ip(net_addr)
+        network = ipaddress.IPv4Network(f"{net_addr}/30", strict=True)
 
-        if first_ip in used_ips or second_ip in used_ips:
+        # 获取可用 IP 地址（排除网络地址和广播地址）
+        usable_ips = list(network.hosts())
+
+        if len(usable_ips) < 2:
+            continue  # 应该不会发生，因为 /30 有两个可用 IP，但为了安全起见
+
+        first_ip = str(usable_ips[0])
+        second_ip = str(usable_ips[1])
+
+        # 检查整个子网是否与已分配的 IP 有重叠
+        subnet_ips = [str(ip) for ip in network]
+        if any(ip in used_ips for ip in subnet_ips):
             continue
 
-        save_used_ips( [first_ip, second_ip], IP_STORAGE_FILE)
+        save_used_ips([first_ip, second_ip], IP_STORAGE_FILE)
         return first_ip, second_ip
+
+def get_peer_ip(this_ip_with_mask):
+    # 创建网络接口对象
+    interface = ipaddress.IPv4Interface(this_ip_with_mask)
+
+    # 获取网络对象
+    network = interface.network
+
+    # 获取所有可用 IP（排除网络地址和广播地址）
+    usable_ips = list(network.hosts())
+
+    # 如果当前 IP 是第一个可用 IP，则对方是第二个可用 IP，反之亦然
+    if interface.ip == usable_ips[0]:
+        return usable_ips[1]
+    else:
+        return usable_ips[0]
 
 # Example usage
 if __name__ == "__main__":

@@ -101,7 +101,7 @@ def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH, eth_table, mgmt_prefix, mgmt
 
     # Prepare topology information for Jinja2 template rendering
     topology = {
-        "name": f"{CURRENT_LAB_PATH}",
+        "name": f"{CURRENT_LAB_PATH.split('/')[-1]}",
         "mgmt": "auto" if mgmt_ips == "auto" else str(mgmt_prefix),
         "topology": {
             "defaults": {

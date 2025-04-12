@@ -1,4 +1,4 @@
 !
-{% for route in routes %}
-	
-{% endfor %}
+{%- for static_route in static_routes %}
+ip route {{ static_route.peer_lo }}/32 {{ static_route.peer_interface_ip }}
+{%- endfor %}
