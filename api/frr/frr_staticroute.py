@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize logger
-log = logger.Logger("FrrInterfaces")
+log = logger.Logger("FrrStaticRoute")
 
 # Fetch Jinja2 templates
 env = Environment(loader=FileSystemLoader('templates/frr'))
