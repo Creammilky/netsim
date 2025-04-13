@@ -2,7 +2,6 @@
     Import examples, look below "#"
 """
 # Builtins
-import json
 import os
 import uuid
 
@@ -10,7 +9,7 @@ import uuid
 from dotenv import load_dotenv
 
 # Internal Files
-from api import topology, create_lab
+from api.lab_manage import topology, create_lab
 from utils import logger, xml_parser
 
 
