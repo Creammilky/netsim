@@ -6,7 +6,6 @@ mgmt:
   ipv6-subnet: auto
 {% else %}
 mgmt:
-  network: br-
   ipv4-subnet: {{ mgmt }}
 {%- endif %}
 

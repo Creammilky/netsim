@@ -36,6 +36,7 @@ def frr_conf_peering(G: nx.Graph, CURRENT_LAB_PATH, hostname):
             peer_ip_file_json = json.loads(f_peer.read())
             peer_asn = peer_ip_file_json["asn"]
             peer_description = "router" + "-"  + peer_asn
+            peer_loopback_ip = peer_ip_file_json["loopback"]
             f_peer.close()
         if peer_asn not in appeared_as_list:
             as_info = {
@@ -43,14 +44,14 @@ def frr_conf_peering(G: nx.Graph, CURRENT_LAB_PATH, hostname):
                 "interfaces": [],
                 "description": peer_description,
             }
-            as_info["interfaces"].append(peer_interface_ip)
+            as_info["interfaces"].append(peer_loopback_ip)
             peer_as_list.append(as_info)
             appeared_as_list.append(peer_asn)
 
         elif peer_asn in appeared_as_list:
             for as_info in peer_as_list:
                 if as_info["asn"] == peer_asn:
-                    as_info["interfaces"].append(peer_interface_ip)
+                    as_info["interfaces"].append(peer_loopback_ip)
                     break
 
         else:

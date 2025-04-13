@@ -2,9 +2,9 @@
 router bgp {{ ASN }}
  bgp router id {{ router_id }}
  {#- Keeping the default policy requirement is recommended for production #}
- no bgp ebgp-requires-policy
 {%- for PEER_AS in peer_as_list %}
-
+{#- When peer is iBGP and same as #}
+{% if  PEER_AS.asn == ASN %}
  neighbor AS{{ PEER_AS.asn }} peer-group
  neighbor AS{{ PEER_AS.asn }} remote-as {{ PEER_AS.asn }}
  neighbor AS{{ PEER_AS.asn }} update-source lo
@@ -14,4 +14,18 @@ router bgp {{ ASN }}
  neighbor {{ interface }} peer-group AS{{ PEER_AS.asn }}
  neighbor {{ interface }} description {{ PEER_AS.description }}
 {%- endfor %}
+{#- When peer is from other as, eBGP #}
+{% else %}
+
+ no bgp ebgp-requires-policy
+ neighbor AS{{ PEER_AS.asn }}  peer-group
+ neighbor AS{{ PEER_AS.asn }}  remote-as {{ PEER_AS.asn }}
+ neighbor AS{{ PEER_AS.asn }}  update-source lo
+ neighbor AS{{ PEER_AS.asn }}  ebgp-multihop 3
+{%- for interface in PEER_AS.interfaces %}
+
+ neighbor {{ interface }} peer-group AS{{ PEER_AS.asn }}
+ neighbor {{ interface }} description {{ PEER_AS.description }}
+{%- endfor %}
+{% endif %}
 {%- endfor %}
