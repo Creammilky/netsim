@@ -28,4 +28,8 @@ router bgp {{ ASN }}
  neighbor {{ interface }} description {{ PEER_AS.description }}
 {%- endfor %}
 {% endif %}
+{# if some hosts connected to this router and need to propagate prefix  #}
+    {% if  %}
+    	
+    {% endif %} 
 {%- endfor %}

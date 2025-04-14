@@ -56,10 +56,47 @@ def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.
     node_type = nx.get_node_attributes(G, "type")
 
     for node in G.nodes():
-        router_ip = None
+        router_ip = nx.get_node_attributes(G, node).get('ip_addr')
+        if router_ip is None: # Assign
+            if node_type.get(node) == "as" or node_type.get(node) is None:
+                    router_ip = ipv4_utils.generate_random_ipv4_with_save(
+                        prefix=as_default_prefix,
+                        count=1,
+                        IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'cache', 'used_ips')
+                    )
 
-        if node_type.get(node) == "as" or node_type.get(node) is None:
-            if nx.get_node_attributes(G, node).get('ip_addr') is None:
+                    log.info("Assigning IP: {} for router {}".format(router_ip, node))
+                    nx.set_node_attributes(G, {node: router_ip}, "ip_addr")
+
+            elif node_type.get(node) == "VP":
+                    router_ip = ipv4_utils.generate_random_ipv4_with_save(
+                        prefix=vp_dafault_prefix,
+                        count=1,
+                        IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'cache', 'used_ips')
+                    )
+                    log.info("Assigning IP: {} for router {}".format(router_ip, node))
+                    nx.set_node_attributes(G, {node: router_ip}, "ip_addr")
+
+            else:
+                log.error(f"Unknown node type {node_type.get(node)}")
+        else:
+            log.info("router {} has ip {}, skip assigning".format(node, router_ip))
+
+        ip_file_data = {
+            "loopback": router_ip,
+            "type": node_type.get(node),
+            "asn": node,
+            "interfaces": []  # 可在后续接口 IP 分配时 append
+        }
+        make_ip_file(CURRENT_LAB_PATH, G, ip_file_data)
+
+def assign_id_for_hosts(G: nx.Graph, CURRENT_LAB_PATH, host_dafault_prefix="172.16.0.0/12"):
+    node_type = nx.get_node_attributes(G, "type")
+
+    for node in G.nodes():
+        router_ip = nx.get_node_attributes(G, node).get('ip_addr')
+        if router_ip is None:  # Assign
+            if node_type.get(node) == "as" or node_type.get(node) is None:
                 router_ip = ipv4_utils.generate_random_ipv4_with_save(
                     prefix=as_default_prefix,
                     count=1,
@@ -69,8 +106,7 @@ def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.
                 log.info("Assigning IP: {} for router {}".format(router_ip, node))
                 nx.set_node_attributes(G, {node: router_ip}, "ip_addr")
 
-        elif node_type.get(node) == "VP":
-            if nx.get_node_attributes(G, node).get('ip_addr') is None:
+            elif node_type.get(node) == "VP":
                 router_ip = ipv4_utils.generate_random_ipv4_with_save(
                     prefix=vp_dafault_prefix,
                     count=1,
@@ -79,22 +115,28 @@ def assign_id_for_routers(G: nx.Graph, CURRENT_LAB_PATH, vp_dafault_prefix="192.
                 log.info("Assigning IP: {} for router {}".format(router_ip, node))
                 nx.set_node_attributes(G, {node: router_ip}, "ip_addr")
 
+            else:
+                log.error(f"Unknown node type {node_type.get(node)}")
+        else:
+            log.info("router {} has ip {}, skip assigning".format(node, router_ip))
 
-        if router_ip:
-            ip_file_data = {
-                "loopback": router_ip,
-                "type": node_type.get(node),
-                "asn": node,
-                "interfaces": []  # 可在后续接口 IP 分配时 append
-            }
+        ip_file_data = {
+            "loopback": router_ip,
+            "type": node_type.get(node),
+            "asn": node,
+            "interfaces": []  # 可在后续接口 IP 分配时 append
+        }
+        make_ip_file(CURRENT_LAB_PATH, G, ip_file_data)
 
-            ip_file_path = os.path.join(CURRENT_LAB_PATH, "cache", f"{node}.ip")
-            try:
-                with open(ip_file_path, "w") as f:
-                    json.dump(ip_file_data, f, indent=2)
-                log.info(f"Wrote IP info to {ip_file_path}")
-            except Exception as e:
-                log.error(f"Error writing IP file for {node}: {e}")
+
+def make_ip_file(CURRENT_LAB_PATH, node, ip_file_data):
+    ip_file_path = os.path.join(CURRENT_LAB_PATH, "cache", f"{node}.ip")
+    try:
+        with open(ip_file_path, "w") as f:
+            json.dump(ip_file_data, f, indent=2)
+        log.info(f"Wrote IP info to {ip_file_path}")
+    except Exception as e:
+        log.error(f"Error writing IP file for {node}: {e}")
 
 
 def define_network_interfaces(G: nx.Graph, CURRENT_LAB_PATH):

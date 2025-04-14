@@ -35,7 +35,6 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
 
     generate_clab.gen_yaml_from_nx(G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, eth_table=eth_table, mgmt_ips=mgmt_ips, mgmt_prefix=mgmt_prefix)
 
-
     interactive_net = graph_utils.InteractiveNetwork(G)
     interactive_net.create_interactive_graph().show(os.path.join(CURRENT_LAB_PATH, 'network.html'), notebook=False)
 

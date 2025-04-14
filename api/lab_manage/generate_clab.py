@@ -123,5 +123,5 @@ def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH, eth_table, mgmt_prefix, mgmt
 
     log.info(f"Topology saved to {output_file}")
 
-
-
+def add_node_to_existing_yaml(yaml_file: os.path, new_node_info, existing_node):
+    pass
