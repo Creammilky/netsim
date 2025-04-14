@@ -242,7 +242,7 @@ def generate_random_ipv4(prefix="172.20.20.0/24", count=1, IP_STORAGE_FILE="./us
 
 def generate_random_ipv4_with_save(prefix="172.20.20.0/24", count=1, IP_STORAGE_FILE="./used_ips"):
     generated_ips = generate_random_ipv4(prefix=prefix, count=count, IP_STORAGE_FILE=IP_STORAGE_FILE)
-    save_used_ips(generated_ips, IP_STORAGE_FILE)
+    save_used_ips([generated_ips] if count == 1 else generated_ips, IP_STORAGE_FILE)
     return generated_ips
 
 
@@ -291,4 +291,4 @@ def get_peer_ip(this_ip_with_mask):
 
 # Example usage
 if __name__ == "__main__":
-    print(is_valid_cidr("192.168.1.254/31"))  # Generate 5 unique IPs
+    print()
