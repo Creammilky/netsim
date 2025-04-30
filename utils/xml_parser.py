@@ -14,16 +14,22 @@ class Property:
 @dataclass
 class Node:
     id: str
+    ip_addr: str
+    prefix: list
     group: str
     weight: float
     ASN: int
+    type: str
     properties: List[Property]
 
     def get_attr(self) -> dict:
         return {"id": self.id,
+                "ip_addr": self.ip_addr,
                 "group": self.group,
+                "prefix": self.prefix,
                 "weight": self.weight,
                 "ASN": self.ASN,
+                "type": self.type,
                 "properties": self.properties}
 
 
@@ -54,23 +60,46 @@ class GraphParser:
         self._parse_edges()
 
     def _parse_nodes(self):
+        def find_text_case_insensitive(parent, tag_name):
+            for elem in parent:
+                if elem.tag.lower() == tag_name.lower():
+                    return elem.text
+            return None
+
         for node_elem in self.root.findall('./Nodes/Node'):
-            node_id = node_elem.get('id')
-            group = node_elem.find('Label').text
-            weight = float(node_elem.find('Weight').text) if node_elem.find('Weight') is not None else None
-            ASN = node_elem.find('ASN').text
+            # 属性字典，统一小写
+            attribs = {k.lower(): v for k, v in node_elem.attrib.items()}
+            _node_id = attribs.get('id')
+
+            _group = find_text_case_insensitive(node_elem, 'Label')
+
+            _weight_text = find_text_case_insensitive(node_elem, 'Weight')
+            _weight = float(_weight_text) if _weight_text is not None else None
+
+            _ASN = find_text_case_insensitive(node_elem, 'ASN')
+            _type = find_text_case_insensitive(node_elem, 'Type')
+
+            _ip_addr = find_text_case_insensitive(node_elem, 'Ip_addr')
+            _prefix = find_text_case_insensitive(node_elem, 'Prefix') or []
+            # 读取 Properties
             properties = []
             for prop in node_elem.findall('./Properties/Property'):
-                properties.append(Property(
-                    name=prop.get('name'),
-                    value=prop.text if prop.text else ''
-                ))
+                prop_name = None
+                # 同样处理属性字典，大小写无关
+                prop_attribs = {k.lower(): v for k, v in prop.attrib.items()}
+                prop_name = prop_attribs.get('name')
 
-            self.nodes[node_id] = Node(
-                id=node_id,
-                group=group,
-                weight=weight,
-                ASN = ASN,
+                prop_value = prop.text or ''
+                properties.append(Property(name=prop_name, value=prop_value))
+
+            self.nodes[_node_id] = Node(
+                id=_node_id,
+                ip_addr=_ip_addr,
+                prefix=_prefix,
+                group=_group,
+                weight=_weight,
+                ASN = int(_ASN),
+                type=_type,
                 properties=properties
             )
 
