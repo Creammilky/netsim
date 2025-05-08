@@ -5,6 +5,7 @@
             <Label>Router A</Label>
             <ASN>64512</ASN>
             <Weight>1.00</Weight>
+            <type>as</type>
             <Properties>
                 <Property name="type">border</Property>
                 <Property name="role">edge</Property>
@@ -15,6 +16,7 @@
             <Label>Router B</Label>
             <ASN>64513</ASN>
             <Weight>0.85</Weight>
+            <type>as</type>
             <Properties>
                 <Property name="type">core</Property>
                 <Property name="role">transit</Property>
@@ -25,6 +27,9 @@
             <Label>Router C</Label>
             <ASN>64514</ASN>
             <Weight>0.90</Weight>
+            <Type>host</Type>
+            <Prefix>100.1.1.0/24</Prefix>
+            <ip_addr>100.1.1.1</ip_addr>
             <Properties>
                 <Property name="type">border</Property>
                 <Property name="role">edge</Property>
@@ -35,6 +40,7 @@
             <Label>Router D</Label>
             <ASN>64515</ASN>
             <Weight>0.95</Weight>
+            <type>as</type>
             <Properties>
                 <Property name="type">core</Property>
                 <Property name="role">transit</Property>
@@ -45,6 +51,7 @@
             <Label>Router E</Label>
             <ASN>64516</ASN>
             <Weight>0.80</Weight>
+            <type>as</type>
             <Properties>
                 <Property name="type">distribution</Property>
                 <Property name="role">aggregation</Property>
@@ -55,6 +62,7 @@
             <Label>Router F</Label>
             <ASN>64517</ASN>
             <Weight>0.75</Weight>
+            <type>as</type>
             <Properties>
                 <Property name="type">border</Property>
                 <Property name="role">edge</Property>
