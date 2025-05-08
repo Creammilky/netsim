@@ -5,7 +5,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from utils import logger
 from dotenv import load_dotenv
-from api.frr import frr_header, frr_interfaces, frr_staticroute, frr_peering, frr_additional
+from api.frr import frr_header, frr_interfaces, frr_staticroute, frr_peering, frr_additional, frr_prefix
 
 # Load environment variables from .env file
 load_dotenv()
@@ -25,15 +25,15 @@ env = Environment(loader=FileSystemLoader('templates/frr'))
 
 
 def gen_frr_config(G:nx.Graph ,CURRENT_LAB_PATH, frr_version, hostname):
-
     header_info = frr_header.frr_conf_header(frr_version=frr_version, hostname=hostname)
     interfaces_info = frr_interfaces.frr_conf_interfaces(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH ,hostname=hostname)
     static_routes_info = frr_staticroute.frr_conf_static_routes(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=hostname)
     bgp_peering_info = frr_peering.frr_conf_peering(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=hostname)
+    prefix = frr_prefix.frr_conf_bgp_prefix(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=hostname)
     additional_setting = frr_additional.frr_conf_additional_setting(G, CURRENT_LAB_PATH, hostname)
 
     with open(os.path.join(CURRENT_LAB_PATH, "config", f"{hostname}","frr.conf"), mode="w+") as f:
-        frr_config = header_info + "\n" +interfaces_info + "\n" + static_routes_info + "\n" + bgp_peering_info + "\n" + additional_setting
+        frr_config = header_info + "\n" +interfaces_info + "\n" + static_routes_info + "\n" + bgp_peering_info + prefix + "\n" + additional_setting
         f.write(frr_config)
 
 

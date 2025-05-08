@@ -37,6 +37,6 @@ if __name__ == "__main__":
 
     G_xml = parser.get_networkx()
 
-    G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
+    # G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
 
-    create_lab.create_lab_instance(G=G_updates, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
+    create_lab.create_lab_instance(G=G_xml,CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=FRR_VERSION)

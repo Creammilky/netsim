@@ -1,11 +1,10 @@
 # This is a base template file for clab.yaml for each container lab
 name: {{ name }}
-{%- if mgmt == "auto" %}
 mgmt:
+{%- if mgmt == "auto" %}
   ipv4-subnet: auto
   ipv6-subnet: auto
 {% else %}
-mgmt:
   ipv4-subnet: {{ mgmt }}
 {%- endif %}
 

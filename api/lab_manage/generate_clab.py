@@ -1,3 +1,4 @@
+import json
 import os
 
 import networkx as nx
@@ -15,6 +16,7 @@ log = logger.Logger("GenClab")
 
 # Fetch environment variables
 ROUTER_IMAGE = os.getenv("ROUTER_IMAGE")
+HOST_IMAGE = os.getenv("HOST_IMAGE")
 LABS_PATH = os.getenv("LABS_PATH")
 if not ROUTER_IMAGE or not LABS_PATH:
     log.error("Required environment variables ROUTER_IMAGE or LABS_PATH are missing!")
@@ -24,7 +26,7 @@ if not ROUTER_IMAGE or not LABS_PATH:
 env = Environment(loader=FileSystemLoader('templates/clab'))
 template = env.get_template('clab.yaml.j2')
 
-def make_yaml_info_from_nodes(G: nx.Graph, mgmt_ips: (list|str) = "auto"):
+def make_yaml_info_from_nodes(G: nx.Graph, CURRENT_LAB_PATH, mgmt_ips: (list|str) = "auto"):
     """
     Create YAML info from the NetworkX graph G.
     """
@@ -33,31 +35,69 @@ def make_yaml_info_from_nodes(G: nx.Graph, mgmt_ips: (list|str) = "auto"):
     nodes = {}
     selected_keys = []
     index = 0
-
+    node_type = nx.get_node_attributes(G, "type")
     if isinstance(mgmt_ips, str) and mgmt_ips == "auto":
         for node, attr in G.nodes(data=True):
-            attr_new = {
-                "image": ROUTER_IMAGE,
-                "binds": f"\n        - config/{str(node)}:/etc/frr",  # Caution for 8 spaces here...
-            }
-            attr_new.update({key: attr[key] for key in selected_keys})
-            index += 1
-            nodes[node] = attr_new
+            if node_type[node] == "host":
+                with open(file=os.path.join(CURRENT_LAB_PATH, "cache", f"{node}.ip"), mode="r") as f:
+                    ip_file_json = json.loads(f.read())
+                    host_prefix = ip_file_json["prefixes"] # Todo: Single prefix currently
+                    interfaces = ip_file_json["interfaces"]
+                    interface_name = interfaces[0]["name"] # Todo: Single prefix currently
+                    interface_ip = interfaces[0]["ip"] # Todo: Single prefix currently
+
+                attr_new = {
+                    "image": HOST_IMAGE,
+                    "exec": f"\n        - ip addr add {host_prefix} dev {interface_name}"
+                            f"\n        - ip route replace 0/0 via {interface_ip}",  # Caution for 8 spaces here...
+                }
+                attr_new.update({key: attr[key] for key in selected_keys})
+                index += 1
+                nodes[node] = attr_new
+
+            else:
+                attr_new = {
+                    "image": ROUTER_IMAGE,
+                    "binds": f"\n        - config/{str(node)}:/etc/frr",  # Caution for 8 spaces here...
+                }
+                attr_new.update({key: attr[key] for key in selected_keys})
+                index += 1
+                nodes[node] = attr_new
 
     elif isinstance(mgmt_ips, list) and mgmt_ips is not None:
         if len(mgmt_ips) != number_of_nodes:
             log.error("Cannot make clab.yaml due to not enough mgmt-ips provided.")
             raise Exception("Cannot make clab.yaml due to not enough mgmt-ips.")
-        for node, attr in G.nodes(data=True):
-            attr_new = {
-                "image": ROUTER_IMAGE,
-                "binds": f"\n        - config/{str(node)}:/etc/frr", # Caution for 8 spaces here...
-                "mgmt-ipv4": mgmt_ips[index],
-            }
-            attr_new.update({key: attr[key] for key in selected_keys})
-            index += 1
-            nodes[node] = attr_new
 
+        for node, attr in G.nodes(data=True):
+            if node_type[node] == "host":
+                with open(file=os.path.join(CURRENT_LAB_PATH, "cache", f"{node}.ip"), mode="r") as f:
+                    ip_file_json = json.loads(f.read())
+                    host_prefix_cidr = ip_file_json["prefixes"].strip().split("/")[-1]
+                    interfaces = ip_file_json["interfaces"]
+                    interface_name = interfaces[0]["name"] # Todo: Single prefix currently
+                    interface_ip = interfaces[0]["ip"] # Todo: Single prefix currently
+                    endpoint_ip = interfaces[0]["endpoint_ip"]
+
+                attr_new = {
+                    "image": HOST_IMAGE,
+                    "exec": f"\n        - ip addr add {interface_ip}/{host_prefix_cidr} dev {interface_name}"
+                            f"\n        - ip route replace 0/0 via {endpoint_ip}",  # Caution for 8 spaces here...
+                    "mgmt-ipv4": mgmt_ips[index],
+                }
+                attr_new.update({key: attr[key] for key in selected_keys})
+                index += 1
+                nodes[node] = attr_new
+
+            else:
+                attr_new = {
+                    "image": ROUTER_IMAGE,
+                    "binds": f"\n        - config/{str(node)}:/etc/frr",  # Caution for 8 spaces here...
+                    "mgmt-ipv4": mgmt_ips[index],
+                }
+                attr_new.update({key: attr[key] for key in selected_keys})
+                index += 1
+                nodes[node] = attr_new
     else:
         log.error("Error type of given mgmt-ipv4")
         raise Exception("Error type of given mgmt-ipv4")
@@ -96,7 +136,7 @@ def gen_yaml_from_nx(G: nx.Graph, CURRENT_LAB_PATH, eth_table, mgmt_prefix, mgmt
     Generate YAML from NetworkX graph and save to file.
     """
     # Prepare node information for the YAML
-    nodes = make_yaml_info_from_nodes(G,mgmt_ips)
+    nodes = make_yaml_info_from_nodes(G,CURRENT_LAB_PATH,mgmt_ips)
     edges = eth_table
 
     # Prepare topology information for Jinja2 template rendering

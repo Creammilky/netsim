@@ -10,7 +10,9 @@ class Property:
     name: str
     value: str
 
-
+'''
+I decide to put other attr into properties, like commercial relationships...
+'''
 @dataclass
 class Node:
     id: str

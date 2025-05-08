@@ -1,12 +1,10 @@
-!
 interface lo
  ip address {{ loopback }}/32
-!
 {%- for interface in interfaces %}
 interface {{ interface.name }}
-{%- if interface.ip %}
+{%- if interface.peer_type != 'host' and interface.ip %}
  ip address {{ interface.ip }}/30
-!
+{%- elif interface.peer_type == 'host' %}
+ ip address {{ interface.ip }}/{{ interface.host_prefix_cidr }}
 {%- endif %}
 {%- endfor %}
-!

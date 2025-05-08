@@ -5,6 +5,9 @@ from utils import logger
 # Initialize logger
 log = logger.Logger("Topology")
 
+'''
+Make user have ability to mitigate whole network topology via export to XML
+'''
 def bgp_to_xml(bgp_update_file_path: str):
     # Todo: Unfinished.
     with open(bgp_update_file_path) as file:

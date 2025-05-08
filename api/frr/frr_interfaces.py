@@ -45,9 +45,12 @@ def frr_conf_interfaces(G: nx.Graph, CURRENT_LAB_PATH, hostname):
             log.warning(f"{hostname} has self-loop edges, maybe BGP prepending")
 
         for interface_dict in interfaces_json:
+            host_prefix_cidr = interface_dict["host_prefix"].strip().split("/")[-1] if interface_dict["host_prefix"] else None
             interface = {
                 "name": interface_dict["name"],
                 "ip": interface_dict["ip"],
+                "peer_type": interface_dict["peer_type"],
+                "host_prefix_cidr": host_prefix_cidr,
             }
             interfaces.append(interface)
 

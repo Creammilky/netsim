@@ -17,17 +17,21 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
     create_lab_dir(list(G.nodes()), CURRENT_LAB_PATH)
     node_num = G.number_of_nodes()
     # assign router ethernet and IP
-    eth_assign.assign_id_for_routers(G, CURRENT_LAB_PATH)
+    eth_assign.assign_id_for_router(G, CURRENT_LAB_PATH)
 
     # generate config file according to IP and AS
-    eth_table = eth_assign.define_network_interfaces(G, CURRENT_LAB_PATH)
+    eth_table = eth_assign.define_network_interfaces_ip(G, CURRENT_LAB_PATH)
 
     # Todo: CRITICAL generate config files according to cache/*.ip
     for host in G.nodes():
-        frr_configurator.gen_frr_config(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=frr_version,
-                                        hostname=host)
-        frr_configurator.gen_frr_daemon(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
-        frr_configurator.gen_vtysh_config(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
+        if nx.get_node_attributes(G, "type")[host] == "host":
+            continue
+        else:
+            # no frr configration for host
+            frr_configurator.gen_frr_config(G=G, CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=frr_version,
+                                            hostname=host)
+            frr_configurator.gen_frr_daemon(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
+            frr_configurator.gen_vtysh_config(CURRENT_LAB_PATH=CURRENT_LAB_PATH, hostname=host)
     # assign mgmt-ipv4 for container lab and gen yaml
     # Todo:think about ip prefix setting and container lab
     mgmt_ips = ipv4_utils.generate_random_ipv4_with_save(prefix=mgmt_prefix, count=node_num,

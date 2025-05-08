@@ -246,19 +246,57 @@ def generate_random_ipv4_with_save(prefix="172.20.20.0/24", count=1, IP_STORAGE_
     return generated_ips
 
 
-def generate_p2p_ip_pairs(IP_STORAGE_FILE="./used_ips"):
-    used_ips = load_used_ips(IP_STORAGE_FILE)
+def generate_p2p_ip_pairs(IP_STORAGE_FILE="./used_ips", prefix="10.0.0.0/8"):
+    return generate_ip_pairs(prefix=prefix, cidr_len = "30", IP_STORAGE_FILE=IP_STORAGE_FILE)
+
+# I don't even remember what I create this function for, since all ips will be /30 p2p network ip.
+def generate_ip_pairs(prefix="10.0.0.0/8", cidr_len = None, IP_STORAGE_FILE="./used_ips"):
+    used_ips = load_used_ips(IP_STORAGE_FILE=IP_STORAGE_FILE)
+    if int(cidr_len) >= 32:
+        raise Exception("CIDR too large.")
+
+    if cidr_len is None:
+        cidr_len = prefix.split("/")[1]
 
     while True:
-        net_addr = generate_random_ipv4("10.0.0.0/8", count=1, IP_STORAGE_FILE=IP_STORAGE_FILE)
-        if not is_valid_cidr(net_addr + "/30"):
-            continue
+        try:
+            network = ipaddress.IPv4Network(prefix, strict=True)
+        except ValueError:
+            raise ValueError(f"Invalid CIDR prefix format: {prefix}. Use format like '192.168.1.0/24'")
 
-        network = ipaddress.IPv4Network(f"{net_addr}/30", strict=True)
+        net_addr = generate_random_ipv4(prefix, count=1, IP_STORAGE_FILE=IP_STORAGE_FILE)
+
+        if not is_valid_cidr(f"{net_addr}/{cidr_len}"):
+            # Calculate network parameters
+            start_int = int(ipaddress.IPv4Address(net_addr))
+            if network.prefixlen < 31:
+                # Exclude network and broadcast addresses for normal networks
+                start_int += 1
+                end_int = int(network.broadcast_address) - 1
+            else:
+                # For /31 and /32, all addresses are usable
+                end_int = int(network.broadcast_address)
+            current_int = start_int
+
+            while current_int <= end_int:
+                ip = str(ipaddress.IPv4Address(current_int))
+                if not is_valid_cidr(ip + "/" + cidr_len):
+                    prefix = ip + "/" + cidr_len
+                    current_int += 1
+                    continue
+                else:
+                    break
+
+            if current_int == end_int + 1:
+                continue
+            else:
+                ip = str(ipaddress.IPv4Address(current_int))
+                network = ipaddress.IPv4Network(f"{ip}/{cidr_len}", strict=True)
+        else:
+            network = ipaddress.IPv4Network(f"{net_addr}/{cidr_len}", strict=True)
 
         # 获取可用 IP 地址（排除网络地址和广播地址）
         usable_ips = list(network.hosts())
-
         if len(usable_ips) < 2:
             continue  # 应该不会发生，因为 /30 有两个可用 IP，但为了安全起见
 
@@ -271,7 +309,7 @@ def generate_p2p_ip_pairs(IP_STORAGE_FILE="./used_ips"):
             continue
 
         save_used_ips([first_ip, second_ip], IP_STORAGE_FILE)
-        return first_ip, second_ip
+        return first_ip, second_ip, network
 
 def get_peer_ip(this_ip_with_mask):
     # 创建网络接口对象
@@ -291,4 +329,29 @@ def get_peer_ip(this_ip_with_mask):
 
 # Example usage
 if __name__ == "__main__":
-    print()
+    import ipaddress
+    import random
+
+
+    def random_cidr(prefix_length=24):
+        max_prefix = 32
+        if not (0 <= prefix_length <= max_prefix):
+            raise ValueError("Invalid prefix length")
+
+        # Calculate the number of available bits for the network portion
+        host_bits = max_prefix - prefix_length
+        random_int = random.getrandbits(prefix_length) << host_bits
+        network = ipaddress.IPv4Network((random_int, prefix_length), strict=True)
+        return str(network)
+
+
+    # Example usage
+    print("____________")
+    print(random_cidr(9))
+    print("____________")
+
+
+    # This function has some efficiency problem
+    ip1, ip2, network= generate_ip_pairs(prefix="10.1.1.0/24", cidr_len="28")
+    print(ip1, ip2)
+    print(is_valid_cidr(network))

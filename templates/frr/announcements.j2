@@ -1,0 +1,9 @@
+{%- if network_prefixes != [] %}
+ !
+ address-family ipv4 unicast
+{%- for network_prefix in network_prefixes %}
+    network {{ network_prefix }}
+{%- endfor %}
+ exit-address-family
+ !
+{%- endif %}

@@ -4,7 +4,7 @@ router bgp {{ ASN }}
  {#- Keeping the default policy requirement is recommended for production #}
 {%- for PEER_AS in peer_as_list %}
 {#- When peer is iBGP and same as #}
-{% if  PEER_AS.asn == ASN %}
+{%- if  PEER_AS.asn == ASN %}
  neighbor AS{{ PEER_AS.asn }} peer-group
  neighbor AS{{ PEER_AS.asn }} remote-as {{ PEER_AS.asn }}
  neighbor AS{{ PEER_AS.asn }} update-source lo
@@ -15,21 +15,17 @@ router bgp {{ ASN }}
  neighbor {{ interface }} description {{ PEER_AS.description }}
 {%- endfor %}
 {#- When peer is from other as, eBGP #}
-{% else %}
+{%- else %}
 
  no bgp ebgp-requires-policy
- neighbor AS{{ PEER_AS.asn }}  peer-group
- neighbor AS{{ PEER_AS.asn }}  remote-as {{ PEER_AS.asn }}
- neighbor AS{{ PEER_AS.asn }}  update-source lo
- neighbor AS{{ PEER_AS.asn }}  ebgp-multihop 3
+ neighbor AS{{ PEER_AS.asn }} peer-group
+ neighbor AS{{ PEER_AS.asn }} remote-as {{ PEER_AS.asn }}
+ neighbor AS{{ PEER_AS.asn }} update-source lo
+ neighbor AS{{ PEER_AS.asn }} ebgp-multihop 3
 {%- for interface in PEER_AS.interfaces %}
 
  neighbor {{ interface }} peer-group AS{{ PEER_AS.asn }}
  neighbor {{ interface }} description {{ PEER_AS.description }}
 {%- endfor %}
-{% endif %}
-{# if some hosts connected to this router and need to propagate prefix  #}
-    {% if  %}
-    	
-    {% endif %} 
+{%- endif %}
 {%- endfor %}
