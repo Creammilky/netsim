@@ -61,28 +61,30 @@ class GraphParser:
         self._parse_nodes()
         self._parse_edges()
 
+    @staticmethod
+    def find_text_case_insensitive(parent, tag_name):
+        for elem in parent:
+            if elem.tag.lower() == tag_name.lower():
+                return elem.text
+        return None
+
     def _parse_nodes(self):
-        def find_text_case_insensitive(parent, tag_name):
-            for elem in parent:
-                if elem.tag.lower() == tag_name.lower():
-                    return elem.text
-            return None
 
         for node_elem in self.root.findall('./Nodes/Node'):
             # 属性字典，统一小写
             attribs = {k.lower(): v for k, v in node_elem.attrib.items()}
             _node_id = attribs.get('id')
 
-            _group = find_text_case_insensitive(node_elem, 'Label')
+            _group = self.find_text_case_insensitive(node_elem, 'Label')
 
-            _weight_text = find_text_case_insensitive(node_elem, 'Weight')
+            _weight_text = self.find_text_case_insensitive(node_elem, 'Weight')
             _weight = float(_weight_text) if _weight_text is not None else None
 
-            _ASN = find_text_case_insensitive(node_elem, 'ASN')
-            _type = find_text_case_insensitive(node_elem, 'Type')
+            _ASN = self.find_text_case_insensitive(node_elem, 'ASN')
+            _type = self.find_text_case_insensitive(node_elem, 'Type')
 
-            _ip_addr = find_text_case_insensitive(node_elem, 'Ip_addr')
-            _prefix = find_text_case_insensitive(node_elem, 'Prefix') or []
+            _ip_addr = self.find_text_case_insensitive(node_elem, 'Ip_addr')
+            _prefix = self.find_text_case_insensitive(node_elem, 'Prefix') or []
             # 读取 Properties
             properties = []
             for prop in node_elem.findall('./Properties/Property'):
@@ -100,7 +102,7 @@ class GraphParser:
                 prefix=_prefix,
                 group=_group,
                 weight=_weight,
-                ASN = int(_ASN),
+                ASN = _ASN,
                 type=_type,
                 properties=properties
             )
@@ -110,8 +112,7 @@ class GraphParser:
             source = edge_elem.get('source')
             target = edge_elem.get('target')
             weight = float(edge_elem.find('Weight').text) if edge_elem.find('Weight') is not None else None
-            edge_type = edge_elem.find('Type').text
-
+            edge_type = self.find_text_case_insensitive(edge_elem, 'Type')
             properties = []
             for prop in edge_elem.findall('./Properties/Property'):
                 properties.append(Property(

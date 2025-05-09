@@ -8,6 +8,33 @@ import json
 # Initialize logger
 log = logger.Logger("GraphUtils")
 
+
+def make_hashable(data):
+    """递归地将列表或字典转换为不可变类型（元组）"""
+    if isinstance(data, dict):
+        return tuple(sorted((k, make_hashable(v)) for k, v in data.items()))
+    elif isinstance(data, list):
+        return tuple(make_hashable(item) for item in data)
+    else:
+        return data
+
+
+def is_graphs_equal(G1, G2):
+    # 比较节点 ID 和属性（使用递归转换为不可变类型）
+    nodes_1 = {(node, make_hashable(attrs)) for node, attrs in G1.nodes(data=True)}
+    nodes_2 = {(node, make_hashable(attrs)) for node, attrs in G2.nodes(data=True)}
+
+    if nodes_1 != nodes_2:
+        return False
+    # 比较边及其属性（递归转换）
+    edges_1 = {(source, target, make_hashable(attrs)) for source, target, attrs in G1.edges(data=True)}
+    edges_2 = {(source, target, make_hashable(attrs)) for source, target, attrs in G2.edges(data=True)}
+
+    if edges_1 != edges_2:
+        return False
+    return True
+
+
 class InteractiveNetwork:
     def __init__(self, G=None):
         self.G = G if G else nx.Graph()
@@ -25,6 +52,7 @@ class InteractiveNetwork:
         degrees = dict(self.G.degree())
         max_degree = max(degrees.values()) if degrees else 1
         min_degree = min(degrees.values()) if degrees else 0
+        node_type = nx.get_node_attributes(self.G, "type")
 
         for node, attrs in self.G.nodes(data=True):
             # 计算节点度
@@ -49,8 +77,12 @@ class InteractiveNetwork:
                     title_html += f"{key}: {value}\n"
 
             # 添加节点，并设置大小
-            if not node.isdigit():
-                H.add_node(node, title=title_html, label=f"Node {node}", color="#db5c5c", size=size)
+            if node_type.get(node, "").lower() == "vp":
+                H.add_node(node, title=title_html, label=f"Node {node}", color="#8B0012", size=size)
+            elif node_type.get(node, "").lower() == "as":
+                H.add_node(node, title=title_html, label=f"Node {node}", color="#20B2AA", size=size)
+            elif node_type.get(node, "").lower() == "host":
+                H.add_node(node, title=title_html, label=f"Node {node}", color="#7FFFAA", size=size)
             else:
                 H.add_node(node, title=title_html, label=f"Node {node}", size=size)
 
@@ -301,3 +333,4 @@ def draw_networkx_graph_complex(G):
 
     plt.axis('off')
     plt.show()
+

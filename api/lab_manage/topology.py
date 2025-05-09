@@ -1,19 +1,14 @@
 import ast
+import os
+from xml.dom import minidom
+
 import networkx as nx
-from utils import logger
+import xml.etree.ElementTree as ET
+
+from utils import logger, xml_parser
 
 # Initialize logger
 log = logger.Logger("Topology")
-
-'''
-Make user have ability to mitigate whole network topology via export to XML
-'''
-def bgp_to_xml(bgp_update_file_path: str):
-    # Todo: Unfinished.
-    with open(bgp_update_file_path) as file:
-        for line in file:
-            print(line.strip())  # strip() 去除换行符
-    pass
 
 
 def bgp_to_networkx(bgp_update_file_path: str, existing_topology=None):
@@ -99,7 +94,76 @@ def bgp_to_networkx(bgp_update_file_path: str, existing_topology=None):
             # Withdraw
             # Todo: withdraw?
 
-
-
-
     return G
+
+
+'''
+Make user have ability to mitigate whole network topology via export to XML
+'''
+
+def networkx_to_xml(G: nx.Graph, save_path: str):
+    # 创建根元素
+    root = ET.Element('Graph')
+
+    # 创建 Nodes 节点
+    nodes_elem = ET.SubElement(root, 'Nodes')
+    for node_id, attrs in G.nodes(data=True):
+        node_elem = ET.SubElement(nodes_elem, 'Node', id=str(node_id))
+
+        # 添加 ASN 标签，值等于 node_id
+        asn_elem = ET.SubElement(node_elem, 'ASN')
+        asn_elem.text = str(node_id)
+
+        for key, value in attrs.items():
+            sub_elem = ET.SubElement(node_elem, key)
+            sub_elem.text = str(value)
+
+    # 创建 Edges 节点
+    edges_elem = ET.SubElement(root, 'Edges')
+    for source, target, attrs in G.edges(data=True):
+        edge_elem = ET.SubElement(edges_elem, 'Edge', source=str(source), target=str(target))
+        for key, value in attrs.items():
+            sub_elem = ET.SubElement(edge_elem, key)
+            sub_elem.text = str(value)
+
+    # 格式化为字符串
+    xml_str = ET.tostring(root, encoding='utf-8')
+    parsed_str = minidom.parseString(xml_str)
+    pretty_xml_as_bytes = parsed_str.toprettyxml(indent="    ", encoding="UTF-8")
+    pretty_xml_as_string = pretty_xml_as_bytes.decode("utf-8")
+
+    # 确保目录存在
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+    # 写入文件
+    with open(save_path, 'w', encoding='utf-8') as f:
+        f.write(pretty_xml_as_string)
+
+    log.info(f"XML saved to: {save_path}")
+
+
+def xml_to_networkx(xml_path: str):
+    parser = xml_parser.GraphParser(xml_path)
+    parser.parse()
+    G_xml = parser.get_networkx()
+    return G_xml
+
+if __name__ == "__main__":
+    G = nx.Graph()
+    G.add_node("1", Label="Router A", ASN=64512, type="as")
+    G.add_node("2", Label="Router B", ASN=64513, type="as")
+    G.add_node("h1", Label="Router C", ASN=64514, Type="host", Prefix="100.1.1.0/24")
+    G.add_node("4", Label="Router D", ASN=64515, type="as")
+    G.add_node("5", Label="Router E", ASN=64516, Weight=0.80, type="as")
+    G.add_node("6", Label="Router F", ASN=64517, type="as")
+    G.add_node("h2", Label="Router C", ASN=64512, Type="host", Prefix="100.3.3.0/24")
+
+    G.add_edge("2", "4")
+    G.add_edge("4", "5")
+    G.add_edge("5", "6")
+    G.add_edge("h1", "6")
+    G.add_edge("1", "4")
+    G.add_edge("1", "h2", Weight=0.80, Status="active")
+
+    xml_output = networkx_to_xml(G, "./test.xml")
+    print(xml_output)

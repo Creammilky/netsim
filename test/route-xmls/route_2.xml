@@ -4,118 +4,49 @@
         <Node id="1">
             <Label>Router A</Label>
             <ASN>64512</ASN>
-            <Weight>1.00</Weight>
             <type>as</type>
-            <Properties>
-                <Property name="type">border</Property>
-                <Property name="role">edge</Property>
-                <Property name="location">datacenter</Property>
-            </Properties>
         </Node>
         <Node id="2">
             <Label>Router B</Label>
             <ASN>64513</ASN>
-            <Weight>0.85</Weight>
             <type>as</type>
-            <Properties>
-                <Property name="type">core</Property>
-                <Property name="role">transit</Property>
-                <Property name="location">backbone</Property>
-            </Properties>
         </Node>
-        <Node id="3">
+        <Node id="h1">
             <Label>Router C</Label>
             <ASN>64514</ASN>
-            <Weight>0.90</Weight>
             <Type>host</Type>
             <Prefix>100.1.1.0/24</Prefix>
-            <ip_addr>100.1.1.1</ip_addr>
-            <Properties>
-                <Property name="type">border</Property>
-                <Property name="role">edge</Property>
-                <Property name="location">branch</Property>
-            </Properties>
         </Node>
         <Node id="4">
             <Label>Router D</Label>
             <ASN>64515</ASN>
-            <Weight>0.95</Weight>
             <type>as</type>
-            <Properties>
-                <Property name="type">core</Property>
-                <Property name="role">transit</Property>
-                <Property name="location">backbone</Property>
-            </Properties>
         </Node>
         <Node id="5">
             <Label>Router E</Label>
             <ASN>64516</ASN>
             <Weight>0.80</Weight>
             <type>as</type>
-            <Properties>
-                <Property name="type">distribution</Property>
-                <Property name="role">aggregation</Property>
-                <Property name="location">regional</Property>
-            </Properties>
         </Node>
         <Node id="6">
             <Label>Router F</Label>
             <ASN>64517</ASN>
-            <Weight>0.75</Weight>
             <type>as</type>
-            <Properties>
-                <Property name="type">border</Property>
-                <Property name="role">edge</Property>
-                <Property name="location">branch</Property>
-            </Properties>
+        </Node>
+        <Node id="h2">
+            <Label>Router C</Label>
+            <ASN>64512</ASN>
+            <Type>host</Type>
+            <Prefix>100.3.3.0/24</Prefix>
         </Node>
     </Nodes>
 
     <Edges>
-        <Edge source="2" target="4">
-            <Weight>0.95</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">40G</Property>
-                <Property name="latency">very-low</Property>
-                <Property name="protocol">OSPF</Property>
-            </Properties>
-        </Edge>
-        <Edge source="4" target="5">
-            <Weight>0.85</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">10G</Property>
-                <Property name="latency">medium</Property>
-                <Property name="protocol">OSPF</Property>
-            </Properties>
-        </Edge>
-        <Edge source="5" target="6">
-            <Weight>0.70</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">1G</Property>
-                <Property name="latency">high</Property>
-                <Property name="protocol">OSPF</Property>
-            </Properties>
-        </Edge>
-        <Edge source="3" target="6">
-            <Weight>0.80</Weight>
-            <Type>undirected</Type>
-            <Properties>
-                <Property name="bandwidth">10G</Property>
-                <Property name="latency">medium</Property>
-                <Property name="protocol">BGP</Property>
-            </Properties>
-        </Edge>
-        <Edge source="1" target="4">
-            <Weight>0.85</Weight>
-            <Type>directed</Type>
-            <Properties>
-                <Property name="bandwidth">10G</Property>
-                <Property name="latency">low</Property>
-                <Property name="protocol">OSPF</Property>
-            </Properties>
-        </Edge>
+        <Edge source="2" target="4"></Edge>
+        <Edge source="4" target="5"></Edge>
+        <Edge source="5" target="6"></Edge>
+        <Edge source="h1" target="6"></Edge>
+        <Edge source="1" target="4"></Edge>
+        <Edge source="1" target="h2"></Edge>
     </Edges>
 </Graph>
