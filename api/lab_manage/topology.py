@@ -100,6 +100,43 @@ def bgp_to_networkx(bgp_update_file_path: str, existing_topology=None):
 '''
 Make user have ability to mitigate whole network topology via export to XML
 '''
+# # I don't know why new function has problem with graph comparing, so keep this
+# def networkx_to_xml(G: nx.Graph, save_path: str):
+#     # 创建根元素
+#     root = ET.Element('Graph')
+#
+#     # 创建 Nodes 节点
+#     nodes_elem = ET.SubElement(root, 'Nodes')
+#
+#     # 分离字符串类型的节点ID和数字类型的节点ID
+#     str_nodes = [(node_id, attrs) for node_id, attrs in G.nodes(data=True) if isinstance(node_id, str)]
+#     num_nodes = [(node_id, attrs) for node_id, attrs in G.nodes(data=True) if isinstance(node_id, (int, float))]
+#
+#     # 按字典顺序排序字符串类型的节点ID
+#     str_nodes.sort(key=lambda x: x[0])
+#
+#     # 按数字顺序排序数字类型的节点ID
+#     num_nodes.sort(key=lambda x: x[0])
+#
+#     # 将排序后的节点合并
+#     sorted_nodes = str_nodes + num_nodes
+#
+#     # 为每个节点创建 XML 元素
+#     for node_id, attrs in sorted_nodes:
+#         node_elem = ET.SubElement(nodes_elem, 'Node', id=str(node_id))
+#
+#         # 添加 ASN 标签，值等于 node_id
+#         asn_elem = ET.SubElement(node_elem, 'ASN')
+#         asn_elem.text = str(node_id)
+#
+#         # 添加节点的其他属性
+#         for key, value in attrs.items():
+#             sub_elem = ET.SubElement(node_elem, key)
+#             sub_elem.text = str(value)
+#
+#     # 创建并保存 XML 文件
+#     tree = ET.ElementTree(root)
+#     tree.write(save_path, encoding='utf-8', xml_declaration=True)
 
 def networkx_to_xml(G: nx.Graph, save_path: str):
     # 创建根元素
@@ -107,13 +144,27 @@ def networkx_to_xml(G: nx.Graph, save_path: str):
 
     # 创建 Nodes 节点
     nodes_elem = ET.SubElement(root, 'Nodes')
-    for node_id, attrs in G.nodes(data=True):
+
+    # 分离纯数字字符串和混合字符串类型的节点ID
+    def sort_key(node_id):
+        # 判断是否是纯数字字符串，如果是则转换为整数，否则按字典序排序
+        if node_id.isdigit():
+            return (0, int(node_id))  # 纯数字字符串按数值排序
+        else:
+            return (1, node_id)  # 混合字符串按字典序排序
+
+    # 将节点按排序规则排序
+    sorted_nodes = sorted(G.nodes(data=True), key=lambda x: sort_key(x[0]))
+
+    # 为每个节点创建 XML 元素
+    for node_id, attrs in sorted_nodes:
         node_elem = ET.SubElement(nodes_elem, 'Node', id=str(node_id))
 
         # 添加 ASN 标签，值等于 node_id
         asn_elem = ET.SubElement(node_elem, 'ASN')
         asn_elem.text = str(node_id)
 
+        # 添加节点的其他属性
         for key, value in attrs.items():
             sub_elem = ET.SubElement(node_elem, key)
             sub_elem.text = str(value)
@@ -140,7 +191,6 @@ def networkx_to_xml(G: nx.Graph, save_path: str):
         f.write(pretty_xml_as_string)
 
     log.info(f"XML saved to: {save_path}")
-
 
 def xml_to_networkx(xml_path: str):
     parser = xml_parser.GraphParser(xml_path)
