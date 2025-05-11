@@ -14,7 +14,6 @@ log = logger.Logger("CreateLab")
 mgmt_prefix = "172.20.0.0/16"
 
 def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
-
     create_lab_dir(list(G.nodes()), CURRENT_LAB_PATH)
     node_num = G.number_of_nodes()
     # assign router ethernet and IP
