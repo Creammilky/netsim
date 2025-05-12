@@ -21,7 +21,7 @@ template = env.get_template('announcements.j2')
 '''
 We don't need config frr for a host, but we need to config for router who has hosts.
 '''
-def frr_conf_bgp_prefix(G: nx.Graph, CURRENT_LAB_PATH, hostname):
+def frr_conf_bgp_prefix(CURRENT_LAB_PATH, hostname):
     network_prefixes = []
     with open(file=os.path.join(CURRENT_LAB_PATH, "cache", f"{hostname}.ip"), mode="r") as f:
         ip_file_json = json.loads(f.read())

@@ -35,15 +35,15 @@ if __name__ == "__main__":
     parser = xml_parser.GraphParser("test/route-xmls/route_2.xml")
     parser.parse()
 
-    # G_xml = parser.get_networkx()
+    G_xml = parser.get_networkx()
 
-    G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
+    # G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
 
-    create_lab.create_lab_instance(G=G_updates,CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
+    create_lab.create_lab_instance(G=G_xml,CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
 
-    G_xml = topology.xml_to_networkx(os.path.join(CURRENT_LAB_PATH, "versions",  'topology_0.xml'))
+    # G_xml = topology.xml_to_networkx(os.path.join(CURRENT_LAB_PATH, "versions",  'topology_0.xml'))
 
-    if nx.is_isomorphic(G_updates, G_xml):
-        print("No changes made!")
-    else:
-        print("Changes made!")
+    # if nx.is_isomorphic(G_updates, G_xml):
+    #     print("No changes made!")
+    # else:
+    #     print("Changes made!")

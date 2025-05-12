@@ -17,7 +17,7 @@ log = logger.Logger("FrrStaticRoute")
 env = Environment(loader=FileSystemLoader('templates/frr'))
 template = env.get_template('frr_static_route.j2')
 
-def frr_conf_static_routes(G: nx.Graph, CURRENT_LAB_PATH, hostname):
+def frr_conf_static_routes(CURRENT_LAB_PATH, hostname):
     static_routes = []
     with open(file=os.path.join(CURRENT_LAB_PATH, "cache", f"{hostname}.ip"), mode="r") as f:
         ip_file_json = json.loads(f.read())

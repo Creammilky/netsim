@@ -17,12 +17,14 @@ log = logger.Logger("FrrBgpPeering")
 env = Environment(loader=FileSystemLoader('templates/frr'))
 template = env.get_template('frr_bgp_section.j2')
 
-def frr_conf_peering(G: nx.Graph, CURRENT_LAB_PATH, hostname):
+def frr_conf_peering(CURRENT_LAB_PATH, hostname):
     peer_as_list = []
     appeared_as_list = []
     with open(file=os.path.join(CURRENT_LAB_PATH, "cache", f"{hostname}.ip"), mode="r") as f:
         ip_file_json = json.loads(f.read())
-        if ip_file_json["type"] == "as" or ip_file_json["type"] == "VP":
+        router_type = ip_file_json["type"].strip().lower()
+
+        if router_type == "as" or router_type == "vp":
         # Load this host/as all interfaces to make frr config for it
             try:
                 interfaces = ip_file_json["interfaces"]
@@ -33,7 +35,7 @@ def frr_conf_peering(G: nx.Graph, CURRENT_LAB_PATH, hostname):
 
             for interface in interfaces:
                 this_interface_ip = interface["ip"]
-                peer_type = interface["peer_type"]
+                peer_type = interface["peer_type"].strip().lower()
                 peer_interface_ip = ipv4_utils.get_peer_ip(this_interface_ip + "/30")
 
                 this_interface_endpoint = interface["endpoint"]
@@ -65,6 +67,6 @@ def frr_conf_peering(G: nx.Graph, CURRENT_LAB_PATH, hostname):
                 else:
                     log.error(f"Something went wrong when configuring bgp {asn}")
 
-            output = template.render(ASN=asn, router_id=loopback, peer_as_list=peer_as_list)
+            output = template.render(ASN=asn, router_id=loopback, peer_as_list=peer_as_list, ROUTER_TYPE=router_type)
             return output
 

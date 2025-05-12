@@ -1,0 +1,6 @@
+
+ !
+ bmp targets bmp_server
+  bmp monitor ipv4 unicast pre-policy
+  bmp connect {{ bmp_ip }} port {{ bmp_port }} min-retry 1000 max-retry 60000
+ exit

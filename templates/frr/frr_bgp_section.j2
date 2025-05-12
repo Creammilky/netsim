@@ -13,6 +13,9 @@ router bgp {{ ASN }}
 
  neighbor {{ interface }} peer-group AS{{ PEER_AS.asn }}
  neighbor {{ interface }} description {{ PEER_AS.description }}
+    {%- if ROUTER_TYPE == "vp" %}
+ neighbor {{ interface }} soft-reconfiguration inbound
+    {%- endif %}
 {%- endfor %}
 {#- When peer is from other as, eBGP #}
 {%- else %}
@@ -22,10 +25,13 @@ router bgp {{ ASN }}
  neighbor AS{{ PEER_AS.asn }} remote-as {{ PEER_AS.asn }}
  neighbor AS{{ PEER_AS.asn }} update-source lo
  neighbor AS{{ PEER_AS.asn }} ebgp-multihop 3
-{%- for interface in PEER_AS.interfaces %}
 
+{%- for interface in PEER_AS.interfaces %}
  neighbor {{ interface }} peer-group AS{{ PEER_AS.asn }}
  neighbor {{ interface }} description {{ PEER_AS.description }}
+    {%- if ROUTER_TYPE == "vp" %}
+ neighbor {{ interface }} soft-reconfiguration inbound
+    {%- endif %}
 {%- endfor %}
 {%- endif %}
 {%- endfor %}

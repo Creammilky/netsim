@@ -11,6 +11,11 @@
             <ASN>64513</ASN>
             <type>as</type>
         </Node>
+        <Node id="3">
+            <Label>Router E</Label>
+            <ASN>64520</ASN>
+            <type>Vp</type>
+        </Node>
         <Node id="h1">
             <Label>Router C</Label>
             <ASN>64514</ASN>
@@ -47,6 +52,7 @@
         <Edge source="5" target="6"></Edge>
         <Edge source="h1" target="6"></Edge>
         <Edge source="1" target="4"></Edge>
+        <Edge source="3" target="5"></Edge>
         <Edge source="1" target="h2"></Edge>
     </Edges>
 </Graph>

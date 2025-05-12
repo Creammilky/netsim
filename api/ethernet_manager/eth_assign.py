@@ -67,11 +67,11 @@ def assign_id_for_router(G: nx.Graph, CURRENT_LAB_PATH,
         node_n = node_name.get(node, f"{node_t}:{node}")
 
         if router_ip is None:
-            if node_t == "as":
+            if node_t.strip().lower() == "as":
                 prefix = as_default_prefix
-            elif node_t == "VP":
+            elif node_t.strip().lower() == "vp":
                 prefix = vp_default_prefix
-            elif node_t == "host":
+            elif node_t.strip().lower() == "host":
                 prefix = host_default_prefix
             else:
                 log.error(f"Unknown node type '{node_t}' for node {node}")
@@ -88,7 +88,7 @@ def assign_id_for_router(G: nx.Graph, CURRENT_LAB_PATH,
             log.info(f"Router {node} ({node_t}) already has IP {router_ip}, skip assigning")
 
         own_prefix = None
-        if node_type.get(node) == "host":
+        if node_type.get(node).strip().lower() == "host":
             node_network_prefixes = nx.get_node_attributes(G, "prefix", None)
             own_prefix = node_network_prefixes.get(node, None)
 
@@ -125,13 +125,13 @@ def define_network_interfaces_ip(G: nx.Graph, CURRENT_LAB_PATH):
         eth_v = v_eth.strip().split(":")[1]
         node_type = nx.get_node_attributes(G, "type")
 
-        if node_type.get(node_v) != "host" and node_type.get(node_u) != "host":
+        if node_type.get(node_v).strip().lower() != "host" and node_type.get(node_u).strip().lower() != "host":
             log.debug(f"Assigning interface for as/vp {node_u} and {node_v}")
             host_prefix = None
             ip_lower, ip_higher , _ = ipv4_utils.generate_p2p_ip_pairs(IP_STORAGE_FILE=os.path.join(CURRENT_LAB_PATH, 'cache', 'used_ips'))
         else:
             # prefix is decide by the one who owns the prefix. Router's ip just need to satisfy connection requirements.
-            if node_type.get(node_u) == "host":
+            if node_type.get(node_u).strip().lower() == "host":
                 log.debug(f"Assigning interface for host {node_u}")
                 hostname = node_u
             else:
