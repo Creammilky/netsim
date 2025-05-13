@@ -5,6 +5,16 @@ This system is a BGP Digital twin. It aims to provide a full functional BGP simu
 for someone wants to deploy their BGP lab fast, accurate and reality. The system is using no SDN technologies to provide the closest "twinning" to production environment.
 We are using dockers with FRRouting instead.
 
+## How to run
+This program have to work with `container-lab`, which is required to run with `sudo`.
+
+I edited `visudo` to let the program avoid entering password in console temporarily.
+
+```commandline
+yourusername ALL=(ALL) NOPASSWD: /usr/bin/clab
+```
+However, I think we should find a proper way to solve this problem.
+
 ## IP file
 
 ### What is an IP file
