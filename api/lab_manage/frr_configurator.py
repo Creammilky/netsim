@@ -34,7 +34,6 @@ def gen_frr_config(G:nx.Graph ,CURRENT_LAB_PATH, frr_version, hostname):
     additional_setting = frr_additional.frr_conf_additional_setting(G, CURRENT_LAB_PATH, hostname)
 
     with open(os.path.join(CURRENT_LAB_PATH, "config", f"{hostname}","frr.conf"), mode="w+") as f:
-        print(hostname)
         frr_config = header_info + "\n" +interfaces_info + "\n" + static_routes_info + "\n" + bgp_peering_info + prefix + bmp_setting +"\n" + additional_setting
         f.write(frr_config)
 

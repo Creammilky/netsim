@@ -1,8 +1,7 @@
-"""
-    Import examples, look below "#"
-"""
 # Builtins
+import functools
 import os
+import signal
 import uuid
 
 # Packages(site)
@@ -11,6 +10,8 @@ import networkx as nx
 
 # Internal Files
 from api.lab_manage import topology, create_lab
+from daemon_ns.bmp.controller import bmp_main
+from daemon_ns.clab import clab
 from utils import logger, xml_parser, graph_utils
 
 # Load environment variables from .env file
@@ -29,21 +30,24 @@ if not ROUTER_IMAGE or not LABS_PATH:
 
 # Usage example
 if __name__ == "__main__":
-    # Generate CURRENT_LAB_PATH dynamically based on the lab
+
     CURRENT_LAB_PATH = os.path.join(LABS_PATH, str(uuid.uuid4()))
+
+    # 注册信号处理器，绑定 lab_path 参数
+    handler = functools.partial(clab.signal_handler, CURRENT_LAB_PATH)
+    signal.signal(signal.SIGINT, handler)
+    signal.signal(signal.SIGTERM, handler)
 
     parser = xml_parser.GraphParser("test/route-xmls/route_2.xml")
     parser.parse()
-
     G_xml = parser.get_networkx()
-
     # G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
 
     create_lab.create_lab_instance(G=G_xml,CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
+    clab.deploy_lab(CURRENT_LAB_PATH)
 
-    # G_xml = topology.xml_to_networkx(os.path.join(CURRENT_LAB_PATH, "versions",  'topology_0.xml'))
-
-    # if nx.is_isomorphic(G_updates, G_xml):
-    #     print("No changes made!")
-    # else:
-    #     print("Changes made!")
+    try:
+        bmp_main() # Process will be stuck here due to the socket
+    except Exception as e:
+        log.error(f"BMP Socket error caught in main process {e}")
+        clab.destroy_lab(CURRENT_LAB_PATH)
