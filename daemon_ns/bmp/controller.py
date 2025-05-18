@@ -4,6 +4,10 @@ import struct
 import threading
 import ipaddress
 
+import mrtparse
+import libbgp
+from libbgp.bgp.message import Message
+
 from utils import logger
 
 log = logger.Logger("bmp-controller")
@@ -284,48 +288,6 @@ def parse_bmp_message(data):
     except Exception as e:
         log.error(f"解析 BMP 消息时出错: {e}")
 
-# def bmp_main():
-#     host = "0.0.0.0"
-#     port = 5000
-#     log.info(f"BMP 控制器正在监听 {host}:{port}...")
-#
-#     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     server.bind((host, port))
-#     server.listen(5)
-#
-#     while True:
-#         conn, addr = server.accept()
-#         log.info(f"[+] 来自 {addr} 的新 BMP 连接")
-#         try:
-#             buffer = b""
-#             while True:
-#                 data = conn.recv(4096)
-#                 if not data:
-#                     break
-#
-#                 buffer += data
-#
-#                 # 检查缓冲区中是否有完整的 BMP 消息
-#                 while len(buffer) >= 6:
-#                     # BMP 消息头的前 6 个字节包含版本、消息长度和消息类型
-#                     version, msg_length, msg_type = struct.unpack('!BIB', buffer[:6])
-#
-#                     if len(buffer) < msg_length:
-#                         # 如果缓冲区中的数据不足以组成一个完整的消息，等待更多数据
-#                         break
-#
-#                     # 提取完整的 BMP 消息
-#                     bmp_message = buffer[:msg_length]
-#                     buffer = buffer[msg_length:]
-#                     print(f"接收到 BMP 消息: {bmp_message}")
-#                     # 解析 BMP 消息
-#                     parse_bmp_message(bmp_message)
-#
-#         except Exception as e:
-#             log.error(f"错误: {e}")
-#         finally:
-#             conn.close()
-#             log.info(f"[-] 来自 {addr} 的 BMP 连接已关闭")
 
 def handle_client(conn, addr):
     log.info(f"[+] 来自 {addr} 的新 BMP 连接")
@@ -342,6 +304,9 @@ def handle_client(conn, addr):
                     break
                 bmp_message = buffer[:msg_length]
                 buffer = buffer[msg_length:]
+                log.debug(bmp_message)
+                open_msg_binary = format_bytes_as_binary_literal(bmp_message)
+                log.debug(Message.unpack(open_msg_binary.encode()).dict())
                 parse_bmp_message(bmp_message)
     except Exception as e:
         log.error(f"错误: {e}")
@@ -361,7 +326,27 @@ def bmp_main():
         client_thread = threading.Thread(target=handle_client, args=(conn, addr))
         client_thread.start()
 
+def format_bytes_as_binary_literal(data, line_length=16):
+    lines = []
+    for i in range(0, len(data), line_length):
+        chunk = data[i:i+line_length]
+        hex_chunk = ''.join(f'\\x{b:02x}' for b in chunk)
+        lines.append(f"b'{hex_chunk}'")
+    return ' \\\n'.join(lines)
 
 if __name__ == "__main__":
-    bmp_main()
 
+    open_msg_binary = b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' \
+                      b'\xff\xff\xff\x00\x35\x01\x04\xea\x60\x00\xb4\x48\xa3' \
+                      b'\xe2\xbe\x18\x02\x06\x01\x04\x00\x01\x00\x01\x02\x02' \
+                      b'\x80\x00\x02\x02\x02\x00\x02\x06\x41\x04\x00\x00\xea\x60'
+    update_msg = "ffffffffffffffffffffffffffffffff003c020000002140010100500200120204000000070000000200000004000000014003040a0eed0c18640303"
+
+
+    open_msg = Message.unpack(open_msg_binary)
+    print(open_msg.dict())
+
+    update_msg_bytes = bytes.fromhex(update_msg)
+
+    update_msg = Message.unpack(update_msg_bytes, capability={})
+    print(update_msg.dict())

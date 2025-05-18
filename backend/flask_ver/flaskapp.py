@@ -1,36 +1,31 @@
-from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS
-from utils.xml_parser import GraphParser
-from utils.graph_utils import InteractiveNetwork
+from flask import Flask, render_template
+from flask_socketio import SocketIO
+from kafka import KafkaConsumer
+import threading, json
 
 app = Flask(__name__)
-parser = GraphParser('../../test/route_3.xml')
-parser.parse()
-G = parser.get_networkx()
-interactive_net = InteractiveNetwork(G)  # G 是你的原始NetworkX图
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-# 启用跨域访问
-CORS(app)
+def consume_kafka():
+    consumer = KafkaConsumer(
+        bootstrap_servers=["localhost:9092"],
+        auto_offset_reset="latest",
+        group_id="topo-monitor",
+        value_deserializer=lambda m: json.loads(m.decode("utf-8"))
+    )
+    consumer.subscribe(pattern="gobmp.*")
 
+    for msg in consumer:
+        data = {
+            "topic": msg.topic,
+            "payload": msg.value
+        }
+        socketio.emit("new_message", data)
 
-@app.route('/update_graph', methods=['POST'])
-def update_graph():
-    data = request.json
-    action = data['action']
-    interactive_net.update_graph(action, data)
-    return jsonify({"status": "success"})
+@app.route("/")
+def index():
+    return render_template("topo.html")
 
-
-@app.route('/show_graph')
-def show_graph():
-    return interactive_net.create_interactive_graph().show('network.html', notebook=False)
-
-
-@app.route('/')
-def root():
-    interactive_net.create_interactive_graph().save_graph('./templates/network.html')
-    return render_template('network.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    threading.Thread(target=consume_kafka, daemon=True).start()
+    socketio.run(app, host="0.0.0.0", port=8080)

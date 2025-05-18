@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 import networkx as nx
-from api.lab_manage import generate_clab
 
 
 @dataclass
@@ -195,7 +194,7 @@ if __name__ == "__main__":
     # print("--------------------------------\n")
     # print(G.edges())
 
-    generate_clab.gen_yaml_from_nx(G)
+    # generate_clab.gen_yaml_from_nx(G)
 
 
     #interactive_net = graph_utils.InteractiveNetwork(G)

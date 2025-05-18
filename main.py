@@ -10,7 +10,7 @@ import networkx as nx
 
 # Internal Files
 from api.lab_manage import topology, create_lab
-from daemon_ns.bmp.controller import bmp_main
+from daemon_ns.bmp import bmp
 from daemon_ns.clab import clab
 from utils import logger, xml_parser, graph_utils
 
@@ -47,7 +47,10 @@ if __name__ == "__main__":
     clab.deploy_lab(CURRENT_LAB_PATH)
 
     try:
-        bmp_main() # Process will be stuck here due to the socket
+        while True:
+            pass
+        # bmp_main() # Process will be stuck here due to the socket
+        # bmp.start_gobmp(lab_path=CURRENT_LAB_PATH, dump="console", port="5000")
     except Exception as e:
         log.error(f"BMP Socket error caught in main process {e}")
         clab.destroy_lab(CURRENT_LAB_PATH)

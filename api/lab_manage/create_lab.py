@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import networkx as nx
 
@@ -45,13 +46,28 @@ def create_lab_instance(G: nx.Graph, CURRENT_LAB_PATH, frr_version):
 
 def create_lab_dir(nodes: list, CURRENT_LAB_PATH):
     """
-    Create directories for the lab setup.
+    Create directories for the lab setup and copy gobmp binary.
     """
     os.makedirs(CURRENT_LAB_PATH, exist_ok=True)
     os.makedirs(os.path.join(CURRENT_LAB_PATH, 'config'), exist_ok=True)
     os.makedirs(os.path.join(CURRENT_LAB_PATH, 'versions'), exist_ok=True)
+    os.makedirs(os.path.join(CURRENT_LAB_PATH, 'bin'), exist_ok=True)
 
     # Todo: I want this should be a hidden folder in future
     os.makedirs(os.path.join(CURRENT_LAB_PATH, 'cache'), exist_ok=True)
+
     for node in nodes:
         os.makedirs(os.path.join(CURRENT_LAB_PATH, 'config', str(node)), exist_ok=True)
+
+    # Copy gobmp binary
+    src_gobmp_path = os.path.abspath("templates/bin/gobmp")
+    dest_gobmp_path = os.path.join(CURRENT_LAB_PATH, 'bin', 'gobmp')
+
+    try:
+        shutil.copy2(src_gobmp_path, dest_gobmp_path)
+        os.chmod(dest_gobmp_path, 0o755)  # 确保可执行权限
+        log.info(f"gobmp copied to {dest_gobmp_path}")
+    except FileNotFoundError:
+        log.error(f"Source gobmp binary not found at {src_gobmp_path}")
+    except Exception as e:
+        log.error(f"Failed to copy gobmp: {e}")
