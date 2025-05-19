@@ -3,6 +3,7 @@ import functools
 import os
 import signal
 import uuid
+from time import sleep
 
 # Packages(site)
 from dotenv import load_dotenv
@@ -43,14 +44,14 @@ if __name__ == "__main__":
     G_xml = parser.get_networkx()
     # G_updates = topology.bgp_to_networkx('test/ripe_output.txt')
 
-    create_lab.create_lab_instance(G=G_xml,CURRENT_LAB_PATH=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
+    create_lab.create_lab_instance(G=G_xml, lab_path=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
     clab.deploy_lab(CURRENT_LAB_PATH)
 
     try:
+        bmp.start_gobmp(lab_path=CURRENT_LAB_PATH, dump="kafka", bmp_port="5000", kafka_server="0.0.0.0:9092")
         while True:
-            pass
-        # bmp_main() # Process will be stuck here due to the socket
-        # bmp.start_gobmp(lab_path=CURRENT_LAB_PATH, dump="console", port="5000")
+            log.debug("is running")
+            sleep(3)
     except Exception as e:
         log.error(f"BMP Socket error caught in main process {e}")
         clab.destroy_lab(CURRENT_LAB_PATH)

@@ -1,89 +1,122 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
-  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
-  <style>#mynetwork { width: 100%; height: 100vh; border: 1px solid lightgray; }</style>
+    <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+    <style>#mynetwork {
+        width: 100%;
+        height: 100vh;
+        border: 1px solid lightgray;
+    }</style>
 </head>
 <body>
 <div id="mynetwork"></div>
 <script>
-  var nodes = new vis.DataSet();
-  var edges = new vis.DataSet();
-  var container = document.getElementById("mynetwork");
-  var data = { nodes: nodes, edges: edges };
-  var options = { physics: { stabilization: false } };
-  var network = new vis.Network(container, data, options);
+    var nodes = new vis.DataSet();
+    var edges = new vis.DataSet();
+    var container = document.getElementById("mynetwork");
+    var data = {nodes: nodes, edges: edges};
+    var options = {
+        physics: {stabilization: false},
+        autoresize: true,
+        clickToUse: true,
+    };
+    var network = new vis.Network(container, data, options);
 
-  var socket = io();
+    var socket = io();
 
-  socket.on("new_message", function(data) {
-    let topic = data.topic;
-    let msg = data.payload;
+    socket.on("new_message", function (data) {
+        let topic = data.topic;
+        let msg = data.payload;
 
-    if (topic.includes("parsed.peer")) {
-      let router = msg.router_ip;
-      let router_asn = msg.router_asn;
-      let peer = msg.remote_ip;
-      let peer_asn = msg.remote_asn;
+        if (topic.includes("parsed.peer")) {
+            let router = msg.local_ip;
+            let router_asn = msg.local_asn;
+            let peer = msg.remote_ip;
+            let peer_asn = msg.remote_asn;
 
-      if (msg.action == "add") {
-        if (!nodes.get(router_asn)) nodes.add({ id: router_asn, label: "VP: " + router_asn + " || " + router, shape: 'ellipse', color: '#8B0012' });
-        if (!nodes.get(peer_asn)) nodes.add({ id: peer_asn, label: "AS: " + peer_asn + " || " + peer, shape: 'ellipse', color: '#20B2AA' });
-        if (!edges.get(router_asn + "-" + peer_asn)) edges.add({ id: router_asn + "-" + peer_asn, from: router_asn, to: peer_asn });
-      } else if (msg.action == "down") {
-          if (edges.get(router_asn + "-" + peer_asn)) edges.remove(router_asn + "-" + peer_asn);
-      }
-    }
-
-    if (topic.includes("unicast_prefix_v4")) {
-        let peer = msg.peer_asn;
-        let host_prefix = msg.prefix;
-        let host_prefix_len = msg.prefix_len;
-
-        // 添加 Host Prefix 节点
-        if (!nodes.get(host_prefix)) {
-          nodes.add({ id: host_prefix, label: "Host: " + host_prefix + "/" + host_prefix_len, shape: 'ellipse', color: '#7FFFAA' });
-        }
-
-        let path = msg.base_attrs.as_path;
-        let prev = null;
-
-        // 遍历 AS_PATH
-        path.forEach(asn => {
-          if (!nodes.get(asn)) {
-            nodes.add({ id: asn, label: "AS" + asn, shape: 'ellipse', color: '#20B2AA' });
-          }
-          if (prev) {
-            if (!edges.get(prev + "-" + asn)) {
-              edges.add({ id: prev + "-" + asn, from: prev, to: asn });
+            if (msg.action === "add") {
+                if (!nodes.get(router_asn)) {
+                    nodes.add({
+                        id: router_asn,
+                        label: "VP: " + router_asn + " \n " + router,
+                        shape: 'ellipse',
+                        color: '#8B0012',
+                        title: `AS:${router_asn}` + '\n' + 'type: VP'
+                    });
+                } else {
+                    // MAKE THIS NODE COLORED #8B0012
+                    nodes.update({
+                        id: router_asn,
+                        label: "VP: " + router_asn + " \n " + router,
+                        color: '#8B0012',
+                        title: `AS:${router_asn}` + '\n' + 'type: VP'
+                    });
+                }
+                if (!nodes.get(peer_asn)) nodes.add({
+                    id: peer_asn,
+                    label: "AS: " + peer_asn + " \n " + peer,
+                    shape: 'ellipse',
+                    color: '#20B2AA',
+                    title: `AS:${peer_asn}` + '\n' + 'type: AS'
+                });
+                if (!edges.get(router_asn + "-" + peer_asn)) edges.add({
+                    id: router_asn + "-" + peer_asn,
+                    from: router_asn,
+                    to: peer_asn
+                });
+            } else if (msg.action === "down") {
+                {#if (edges.get(router_asn + "-" + peer_asn)) edges.remove(router_asn + "-" + peer_asn);#}
             }
-          }
-          prev = asn;
-        });
-
-        // 先连 Host Prefix 到 AS_PATH 的第一跳 ASN
-        if (path.length > 0) {
-          let first_asn = path[0];
-          if (!edges.get(host_prefix + "-" + first_asn)) {
-            edges.add({ id: host_prefix + "-" + first_asn, from: host_prefix, to: first_asn });
-          }
-        } else {
-          // 如果 AS_PATH 为空，直接连 Host Prefix 到 Peer
-          if (!edges.get(host_prefix + "-" + peer)) {
-            edges.add({ id: host_prefix + "-" + peer, from: host_prefix, to: peer });
-          }
         }
 
-        // 再连 AS_PATH 最后一跳 ASN 到 Peer
-        if (prev && !edges.get(prev + "-" + peer)) {
-          edges.add({ id: prev + "-" + peer, from: prev, to: peer });
-        }
+        if (topic.includes("unicast_prefix_v4")) {
+            let host_prefix = msg.prefix;
+            let host_prefix_len = msg.prefix_len;
 
-        // 更新 Peer 节点信息
-        nodes.update({ id: peer, label: "P: " + peer + "\n" + msg.prefix });
-    }
-  });
+            let path = msg.base_attrs.as_path;
+            let prev = null;
+
+            path.forEach(asn => {
+                if (!nodes.get(asn)) {
+                    nodes.add({
+                        id: asn,
+                        label: "AS" + asn, shape: 'ellipse',
+                        color: '#20B2AA',
+                        title: `AS:${asn}` + '\n' + 'type: AS'
+                    });
+                }
+                if (prev) {
+                    if (!edges.get(prev + "-" + asn)) {
+                        edges.add({
+                            id: prev + "-" + asn,
+                            from: prev,
+                            to: asn
+                        });
+                    }
+                }
+                prev = asn;
+            });
+
+            // forEach 全部执行完了，prev 就是最后一个 asn
+            if (!nodes.get(host_prefix)) {
+                nodes.add({
+                    id: host_prefix,
+                    label: "Host: " + host_prefix + "/" + host_prefix_len,
+                    shape: 'ellipse',
+                    color: '#7FFFAA',
+                    title: `Host:${host_prefix}/${host_prefix_len}` + '\n' + 'type: HOST'
+                });
+            }
+
+            if (prev && !edges.get(prev + "-" + host_prefix)) {
+                edges.add({id: prev + "-" + host_prefix,
+                    from: prev,
+                    to: host_prefix
+                });
+            }
+        }
+    });
 </script>
 </body>
 </html>
