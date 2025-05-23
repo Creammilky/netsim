@@ -17,31 +17,28 @@ def start_gobmp(lab_path, dump: Literal["kafka", "console"], bmp_port, kafka_ser
 
     log.info(f"Starting gobmp at {gobmp_path}...")
 
+    cmd = [gobmp_path, f"--dump={dump}", f"--source-port={bmp_port}"]
+
     if dump == "kafka":
         if kafka_server is None:
             raise Exception("kafka settings required for kafka dump")
-        else:
-            result = subprocess.run(
-                [gobmp_path, f"--dump={dump}", f"--source-port={bmp_port}", f"--kafka-server={kafka_server}"],
-                cwd=lab_path,
-                capture_output=True,
-                text=True
-            )
-    else:
-        proc = subprocess.Popen(
-            [gobmp_path, f"--dump={dump}", f"--source-port={bmp_port}"],
-            cwd=lab_path,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
+        cmd.append(f"--kafka-server={kafka_server}")
 
-        for line in proc.stdout:
-            log.info(line.strip())
+    proc = subprocess.Popen(
+        cmd,
+        cwd=lab_path,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True
+    )
 
-    log.info(result.stdout)
+    # 实时读取 gobmp 输出
+    for line in proc.stdout:
+        log.info(line.strip())
 
-    if result.returncode != 0:
-        log.error(f"gobmp failed: {result.stderr}")
+    proc.wait()
+
+    if proc.returncode != 0:
+        log.error(f"gobmp exited with code {proc.returncode}")
     else:
         log.info("gobmp finished successfully.")

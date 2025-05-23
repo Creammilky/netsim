@@ -32,7 +32,8 @@ if not ROUTER_IMAGE or not LABS_PATH:
 # Usage example
 if __name__ == "__main__":
 
-    CURRENT_LAB_PATH = os.path.join(LABS_PATH, str(uuid.uuid4()))
+    LAB_ID = uuid.uuid4()
+    CURRENT_LAB_PATH = os.path.join(LABS_PATH, str(LAB_ID))
 
     # 注册信号处理器，绑定 lab_path 参数
     handler = functools.partial(clab.signal_handler, CURRENT_LAB_PATH)
@@ -46,9 +47,11 @@ if __name__ == "__main__":
 
     create_lab.create_lab_instance(G=G_xml, lab_path=CURRENT_LAB_PATH, frr_version=FRR_VERSION)
     clab.deploy_lab(CURRENT_LAB_PATH)
+    from daemon_ns.netsim_daemon import start_daemon
+    start_daemon(lab_path=CURRENT_LAB_PATH, lab_id=LAB_ID, is_test=True)
 
     try:
-        bmp.start_gobmp(lab_path=CURRENT_LAB_PATH, dump="kafka", bmp_port="5000", kafka_server="0.0.0.0:9092")
+        # bmp.start_gobmp(lab_path=CURRENT_LAB_PATH, dump="kafka", bmp_port="5000", kafka_server="0.0.0.0:9092")
         while True:
             log.debug("is running")
             sleep(3)

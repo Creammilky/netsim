@@ -60,14 +60,30 @@ def create_lab_dir(nodes: list, CURRENT_LAB_PATH):
         os.makedirs(os.path.join(CURRENT_LAB_PATH, 'config', str(node)), exist_ok=True)
 
     # Copy gobmp binary
-    src_gobmp_path = os.path.abspath("templates/bin/gobmp")
-    dest_gobmp_path = os.path.join(CURRENT_LAB_PATH, 'bin', 'gobmp')
+    src_dir = os.path.abspath("templates/bin")
+    bin_dest_dir = os.path.join(CURRENT_LAB_PATH, 'bin')
+    dest_dir = CURRENT_LAB_PATH
+
+    # 确保目标目录存在
+    os.makedirs(dest_dir, exist_ok=True)
 
     try:
-        shutil.copy2(src_gobmp_path, dest_gobmp_path)
-        os.chmod(dest_gobmp_path, 0o755)  # 确保可执行权限
-        log.info(f"gobmp copied to {dest_gobmp_path}")
+        for filename in os.listdir(src_dir):
+            if filename.endswith(".sh"):
+                src_file = os.path.join(src_dir, filename)
+                dest_file = os.path.join(dest_dir, filename)
+                if os.path.isfile(src_file):
+                    shutil.copy2(src_file, dest_file)
+                    os.chmod(dest_file, 0o755)
+                    log.info(f"{filename} copied to {dest_file}")
+            else:
+                src_file = os.path.join(src_dir, filename)
+                dest_file = os.path.join(bin_dest_dir, filename)
+                if os.path.isfile(src_file):
+                    shutil.copy2(src_file, dest_file)
+                    os.chmod(dest_file, 0o755)
+                    log.info(f"{filename} copied to {dest_file}")
     except FileNotFoundError:
-        log.error(f"Source gobmp binary not found at {src_gobmp_path}")
+        log.error(f"Source directory not found: {src_dir}")
     except Exception as e:
-        log.error(f"Failed to copy gobmp: {e}")
+        log.error(f"Failed to copy files: {e}")

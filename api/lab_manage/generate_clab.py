@@ -56,9 +56,12 @@ def make_yaml_info_from_nodes(G: nx.Graph, CURRENT_LAB_PATH, mgmt_ips: (list|str
                 nodes[node] = attr_new
 
             else:
+                netconf_port = f"830{index}"
                 attr_new = {
                     "image": ROUTER_IMAGE,
                     "binds": f"\n        - config/{str(node)}:/etc/frr",  # Caution for 8 spaces here...
+                    # "ports": f"\n        - {netconf_port}:830",
+
                 }
                 attr_new.update({key: attr[key] for key in selected_keys})
                 index += 1
@@ -90,9 +93,11 @@ def make_yaml_info_from_nodes(G: nx.Graph, CURRENT_LAB_PATH, mgmt_ips: (list|str
                 nodes[node] = attr_new
 
             else:
+                netconf_port = f"830{index}"
                 attr_new = {
                     "image": ROUTER_IMAGE,
                     "binds": f"\n        - config/{str(node)}:/etc/frr",  # Caution for 8 spaces here...
+                    # "ports": f"\n        - {netconf_port}:830",
                     "mgmt-ipv4": mgmt_ips[index],
                 }
                 attr_new.update({key: attr[key] for key in selected_keys})
